@@ -1,0 +1,33 @@
+h1 {
+  max-width: 350px;
+  font-size: 45px;
+}
+
+.buttons__con {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%);
+  z-index: 10;
+}
+
+.buttons__con div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.buttons__con button,
+.buttons__con select {
+  height: 50px;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 1em;
+  background: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: inherit;
+}
