@@ -1,4 +1,4 @@
-import Game from './scripts/startGame';
+import Game from './scripts/startGame.js';
 
 const pElement = document.querySelector('span');
 const startGameBtn = document.querySelector('.play')

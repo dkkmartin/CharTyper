@@ -1,4 +1,4 @@
-import quoteAPI from './qouteAPI'
+import quoteAPI from './qouteAPI.js'
 
 export default class Game {
   static removeMenu() {
