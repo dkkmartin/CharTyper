@@ -1,4 +1,3 @@
-import quoteAPI from './scripts/qouteAPI'
 import Game from './scripts/startGame';
 
 const pElement = document.querySelector('span');
