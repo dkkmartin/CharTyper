@@ -8,7 +8,7 @@ function makeElementToGrid() {
     newP.textContent = 0;
     appDiv.appendChild(newP);
   }
-  pElements = document.querySelectorAll('p');
+  pElements = document.querySelectorAll('.app__text p');
 }
 
 function getRandomChar() {

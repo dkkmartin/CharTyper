@@ -22,6 +22,8 @@ export default class Game {
   }
 
   static async startGame() {
+    const highscoreDiv = document.querySelector('.highscore')
+    highscoreDiv.remove()
     await delay(5000)
     const select = document.querySelector('select')
     const qoute = await quoteAPI(select.value)  
