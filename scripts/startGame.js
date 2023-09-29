@@ -1,12 +1,12 @@
 import quoteAPI from './qouteAPI.js'
 
 export default class Game {
-  static removeMenu() {
+  static removeMenu () {
     const buttonsDiv = document.querySelector('.buttons__con')
     buttonsDiv.style.display = 'none'
   }
 
-  static async startTimer() {
+  static async startTimer () {
     const main = document.querySelector('main')
     const newH1 = document.createElement('h1')
     newH1.textContent = 5
@@ -15,18 +15,18 @@ export default class Game {
     for (let index = 5; index >= 1; index--) {
       newH1.textContent = index
       await delay(990)
-      if(index === 1) {
+      if (index === 1) {
         newH1.remove()
       }
     }
   }
 
-  static async startGame() {
+  static async startGame () {
     const highscoreDiv = document.querySelector('.highscore')
     highscoreDiv.remove()
     await delay(5000)
     const select = document.querySelector('select')
-    const qoute = await quoteAPI(select.value)  
+    const qoute = await quoteAPI(select.value)
     const gameDiv = document.querySelector('.app')
     const background = document.querySelector('.app__text')
     background.remove()
@@ -35,6 +35,6 @@ export default class Game {
   }
 }
 
-function delay(time) {
-  return new Promise(resolve => setTimeout(resolve, time));
+function delay (time) {
+  return new Promise(resolve => setTimeout(resolve, time))
 }
