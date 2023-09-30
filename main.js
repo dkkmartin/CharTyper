@@ -3,9 +3,11 @@ import getScoresFromDB from './scripts/getUserScores.js'
 import Timer from './scripts/timer.js'
 import Spinner from './scripts/spinner.js'
 import { animate } from 'motion'
+import postDataToDB from './scripts/makeNewUserScore.js'
+import Cookies from 'js-cookie'
 
 const highscore = document.querySelector('.highscore')
-const pElement = document.querySelector('span')
+const spanElement = document.querySelector('span')
 const startGameBtn = document.querySelector('.play')
 const keyChecker = (key, char) => key === char
 const winChecker = () => words.length === textArray.join('').length
@@ -19,8 +21,9 @@ let timer
 
 window.onload = async () => {
   const spinner = new Spinner()
-  makeHighscore()
+  displayHighscore()
   spinner.stop()
+  console.log(Cookies.get())
 }
 
 startGameBtn.addEventListener('click', async (e) => {
@@ -42,7 +45,7 @@ function animationWrong () {
   )
 }
 
-async function makeHighscore () {
+async function displayHighscore () {
   const data = Array.from(await getScoresFromDB())
   data.sort((a, b) => b.score - a.score)
   data.forEach((element, index) => {
@@ -64,6 +67,10 @@ function gameData () {
 }
 
 function handleKeyPress (e) {
+  // Remove
+  if (e.key === 'Escape') {
+    skip()
+  }
   if (keyChecker(e.key, currentChar)) {
     wordHandler()
     iterator++
@@ -93,41 +100,84 @@ function spanMaker (words) {
 
 function wordHandler () {
   words.push(currentChar)
-  pElement.textContent = ''
+  spanElement.textContent = ''
   const string = textArray.join('').slice(iterator + 1)
   const newSpan = spanMaker(words)
-  pElement.innerHTML = `${newSpan}` + string
+  spanElement.innerHTML = `${newSpan}` + string
 }
 
 function getNewText () {
-  pElement.textContent = textArray.join('')
+  spanElement.textContent = textArray.join('')
 }
 
 function winHandler () {
   timer.stop()
   clearInterval(timerInterval)
   const winInputDiv = document.querySelector('.user__input')
-  const winInput = document.querySelector('.user__input input')
+  const playAgainBtn = document.querySelector('.play__again')
   const timeInSeconds = Math.round(timer.getTime() / 1000)
   const WPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
   document.getElementById('time').innerText = `WPM: ${WPM}`
   if (WPM <= 60) {
-    pElement.innerText = 'Thats really bad...'
+    spanElement.innerText = 'Thats really bad...'
   }
   if (WPM >= 61 && WPM <= 89) {
-    pElement.innerText = 'You can do better...'
+    spanElement.innerText = 'You can do better...'
   }
   if (WPM >= 90 && WPM <= 110) {
-    pElement.innerText = 'Alright...'
+    spanElement.innerText = 'Alright...'
   }
   if (WPM >= 111 && WPM <= 129) {
-    pElement.innerText = 'Thats really good!'
+    spanElement.innerText = 'Thats really good!'
   }
   if (WPM >= 130) {
-    pElement.innerText = 'wow!!!'
+    spanElement.innerText = 'wow!!!'
   }
-
+  if (Cookies.get('WPM')) {
+    console.log('test')
+  } else {
+    Cookies.set('WPM', WPM)
+  }
   winInputDiv.style.display = 'flex'
+  playAgainBtn.addEventListener('click', () => {
+    makeNewHighscore(WPM)
+  })
+}
+
+// Remove
+function skip () {
+  const winInputDiv = document.querySelector('.user__input')
+  const playAgainBtn = document.querySelector('.play__again')
+  winInputDiv.style.display = 'flex'
+  timer.stop()
+  clearInterval(timerInterval)
+  removeKeyboardListener()
+  playAgainBtn.addEventListener('click', () => {
+    makeNewHighscore()
+  })
+}
+
+function makeNewHighscore (score) {
+  const userInput = document.querySelector('.user__input input')
+  const inputValue = userInput.value.trim().toLowerCase()
+  if (!inputValue.trim()) {
+    // If input is empty just refresh the page
+    location.reload()
+  } else {
+    // If input not empty push name and score to DB then refresh the page
+    const postData = {
+      name: inputValue,
+      score
+    }
+    postDataToDB(postData)
+      .then(() => {
+        location.reload()
+      })
+  }
+}
+
+function cookieHandler (score) {
+
 }
 
 function startTimer () {

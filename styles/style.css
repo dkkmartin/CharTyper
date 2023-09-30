@@ -61,13 +61,6 @@ h1 {
   color: red;
 }
 
-.user__1::after {
-  content: '\2655';
-  position: absolute;
-  right: 17%;
-  top: 42%;
-}
-
 .lds-dual-ring {
   position: relative;
   left: calc(50% - 40px);
