@@ -37,7 +37,6 @@ document.addEventListener('mouseout', () => {
 
 makeElementToGrid()
 randomNumbersLoop()
-
 setInterval(() => {
   randomNumbersLoop()
 }, 1000)

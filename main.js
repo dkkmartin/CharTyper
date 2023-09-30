@@ -106,6 +106,8 @@ function getNewText () {
 function winHandler () {
   timer.stop()
   clearInterval(timerInterval)
+  const winInputDiv = document.querySelector('.user__input')
+  const winInput = document.querySelector('.user__input input')
   const timeInSeconds = Math.round(timer.getTime() / 1000)
   const WPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
   document.getElementById('time').innerText = `WPM: ${WPM}`
@@ -124,6 +126,8 @@ function winHandler () {
   if (WPM >= 130) {
     pElement.innerText = 'wow!!!'
   }
+
+  winInputDiv.style.display = 'flex'
 }
 
 function startTimer () {

@@ -46,6 +46,47 @@ span {
   animation: countdown 1s infinite;
 }
 
+.user__input {
+  display: none;
+  flex-direction: column;
+  gap: 3em;
+}
+
+.user__input label {
+  font-size: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+
+.user__input input {
+  outline: none;
+  border: none;
+  background-color: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 30px;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.play__again {
+  background-color: black;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: color 0.5s, border 0.5s;
+}
+
+.play__again:hover {
+  color: white;
+  border: 1px solid white;
+}
+
 @keyframes countdown {
   0% {
     transform: scale(8);

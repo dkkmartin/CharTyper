@@ -27,6 +27,7 @@ body {
 }
 
 .mouse__mask {
+  z-index: 10;
   position: absolute;
   top: calc(50% - 2500px);
   right: calc(50% - 2500px);
