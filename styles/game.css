@@ -21,6 +21,7 @@
 
 span {
   max-width: 1000px;
+  order: 2;
 }
 
 .currentChar {
@@ -50,6 +51,10 @@ span {
   display: none;
   flex-direction: column;
   gap: 3em;
+  border: 1px solid white;
+  padding: 1em 3em;
+  border-radius: 50px;
+  order: 4;
 }
 
 .user__input label {
@@ -73,18 +78,31 @@ span {
   text-align: center;
 }
 
+.user__input input::placeholder {
+  opacity: 0.1;
+  font-style: italic;
+}
+
 .play__again {
   background-color: black;
   color: rgba(255, 255, 255, 0.5);
   font-size: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
   cursor: pointer;
   transition: color 0.5s, border 0.5s;
+  border: none;
+  text-transform: uppercase;
 }
 
 .play__again:hover {
   color: white;
-  border: 1px solid white;
+}
+
+.current__highscore {
+  order: 3;
+}
+
+#time {
+  order: 1;
 }
 
 @keyframes countdown {

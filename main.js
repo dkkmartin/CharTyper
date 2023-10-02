@@ -133,15 +133,37 @@ function winHandler () {
   if (WPM >= 130) {
     spanElement.innerText = 'wow!!!'
   }
+  const h2 = document.createElement('h2')
+  h2.classList.add('current__highscore')
   if (Cookies.get('WPM')) {
-    console.log('test')
+    if (WPM > Cookies.get('WPM')) {
+      Cookies.set('WPM', WPM)
+      winInputDiv.style.display = 'flex'
+      h2.innerHTML = `Your new highscore is: ${Cookies.get('WPM')} WPM`
+      document.querySelector('.app').appendChild(h2)
+      playAgainBtn.textContent = 'Submit'
+      playAgainBtn.addEventListener('click', () => {
+        makeNewHighscore(WPM)
+      })
+    } else {
+      h2.innerHTML = `Your highscore is: ${Cookies.get('WPM')} WPM`
+      document.querySelector('.app').appendChild(h2)
+      winInputDiv.style.display = 'flex'
+      document.querySelector('.user__input label').remove()
+      playAgainBtn.addEventListener('click', () => {
+        location.reload()
+      })
+    }
   } else {
     Cookies.set('WPM', WPM)
+    h2.innerHTML = `Your highscore is: ${Cookies.get('WPM')} WPM`
+    document.querySelector('.app').appendChild(h2)
+    winInputDiv.style.display = 'flex'
+    document.querySelector('.user__input label').remove()
+    playAgainBtn.addEventListener('click', () => {
+      location.reload()
+    })
   }
-  winInputDiv.style.display = 'flex'
-  playAgainBtn.addEventListener('click', () => {
-    makeNewHighscore(WPM)
-  })
 }
 
 // Remove
