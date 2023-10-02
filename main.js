@@ -5,6 +5,7 @@ import Spinner from './scripts/spinner.js'
 import { animate } from 'motion'
 import postDataToDB from './scripts/makeNewUserScore.js'
 import Cookies from 'js-cookie'
+import { v4 as uuidv4 } from 'uuid'
 
 const highscore = document.querySelector('.highscore')
 const spanElement = document.querySelector('span')
@@ -24,6 +25,11 @@ window.onload = async () => {
   displayHighscore()
   spinner.stop()
   console.log(Cookies.get())
+  // If user doesn't have a ID, make one
+  if (!Cookies.get('ID')) {
+    const uniqueId = uuidv4()
+    Cookies.set('ID', uniqueId)
+  }
 }
 
 startGameBtn.addEventListener('click', async (e) => {
@@ -159,9 +165,8 @@ function winHandler () {
     h2.innerHTML = `Your highscore is: ${Cookies.get('WPM')} WPM`
     document.querySelector('.app').appendChild(h2)
     winInputDiv.style.display = 'flex'
-    document.querySelector('.user__input label').remove()
     playAgainBtn.addEventListener('click', () => {
-      location.reload()
+      makeNewHighscore(WPM)
     })
   }
 }
@@ -178,7 +183,6 @@ function skip () {
     makeNewHighscore()
   })
 }
-
 function makeNewHighscore (score) {
   const userInput = document.querySelector('.user__input input')
   const inputValue = userInput.value.trim().toLowerCase()
@@ -189,17 +193,14 @@ function makeNewHighscore (score) {
     // If input not empty push name and score to DB then refresh the page
     const postData = {
       name: inputValue,
-      score
+      score,
+      id: Cookies.get('ID')
     }
     postDataToDB(postData)
       .then(() => {
         location.reload()
       })
   }
-}
-
-function cookieHandler (score) {
-
 }
 
 function startTimer () {
