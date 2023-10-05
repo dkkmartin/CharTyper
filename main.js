@@ -2,7 +2,6 @@ import Game from './scripts/startGame.js'
 import getScoresFromDB from './scripts/getUserScores.js'
 import Timer from './scripts/timer.js'
 import Spinner from './scripts/spinner.js'
-import { animate } from 'motion'
 import postDataToDB from './scripts/makeNewUserScore.js'
 import Cookies from 'js-cookie'
 import { v4 as uuidv4 } from 'uuid'
@@ -42,14 +41,6 @@ startGameBtn.addEventListener('click', async (e) => {
   startTimer()
   keyboardHandler()
 })
-
-function animationWrong () {
-  animate(
-    '#time',
-    { x: [0, -25, 0, 25, 0, -25, 0, 25, 0], color: ['red', '#808080'] },
-    { duration: 0.5 }
-  )
-}
 
 async function displayHighscore () {
   const data = Array.from(await getScoresFromDB())
