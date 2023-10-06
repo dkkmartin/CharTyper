@@ -6,17 +6,18 @@ import { animate } from 'motion'
 let iteratorWord = 0
 let iteratorChar = 0
 let wordsTyped = 0
+let errorsByUser = 0
 let currentWord
 let textArray
 let typedCharacterArray = []
-const allTypedCharacters = []
+let allTypedCharacters = []
 let timerInterval
 let timer
 
 // Fetch text, clean text
 async function getTextFromApi () {
-  const textData = 'bent bent bent'
   // Get the quote from API
+  const textData = 'Ben 10 ben 10 ben 10'
   // const textData = await getQoute('50')
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
@@ -54,11 +55,14 @@ function keyPressHandler (e) {
   if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ]/)) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
+    allTypedCharacters.push(e.key)
     // If typed character is not equal to first character in word
     // We dont actually need this if we are to support wrong typed words
     if (e.key !== firstCharInWord) {
       // Trigger wrong feedback to user
       console.log('wrong')
+      errorsByUser++
+      console.log('Erros made: ' + errorsByUser)
       // Else it must be right character
     } else {
       // Trigger correct feedback to user
@@ -81,8 +85,9 @@ function keyPressHandler (e) {
       iteratorChar = 0
       // current word is now picked from text array with the iterator we just increased
       currentWord = textArray[iteratorWord]
-      // Push typed word to an array for all words typed
-      allTypedCharacters.push(typedCharacterArray.join(''))
+      const typedWord = allTypedCharacters.join('')
+      allTypedCharacters = []
+      allTypedCharacters.push(typedWord)
       // Reset typed character array
       typedCharacterArray = []
       // Words typed is increased as we typed the word
@@ -98,37 +103,68 @@ function keyPressHandler (e) {
   console.log(typedCharacterArray)
 }
 
-function wordsPerMinutesCalculator () {
-  function calculateArrayEquality () {
-    if (allTypedCharacters.length !== textArray.length) {
-      throw new Error('Arrays must have the same length for comparison.')
-    }
+function statisticCalculator () {
+  // Calculate netWPM
+  function calculateNetWPM (grossWPM, errors, timeInSeconds) {
+    // Convert time in seconds to time in minutes
+    const timeInMinutes = timeInSeconds / 60
 
-    const length = allTypedCharacters.length
-    let equalCount = 0
+    // Calculate error rate per minute
+    const errorRate = errors / timeInMinutes
 
-    for (let i = 0; i < length; i++) {
-      if (allTypedCharacters[i] === textArray[i]) {
-        equalCount++
-      }
-    }
+    // Calculate net WPM by subtracting the error rate from gross WPM
+    const netWPM = grossWPM - errorRate
 
-    const percentage = (equalCount / length) * 100
-    return percentage
+    return netWPM
   }
+
+  // Calculate accuracy with lavenshtein distance algorithm
+  function calculateStringSimilarity (string1, string2) {
+    function levenshteinDistance (str1, str2) {
+      const m = str1.length
+      const n = str2.length
+
+      const dp = Array.from(Array(m + 1), () => Array(n + 1).fill(0))
+
+      for (let i = 0; i <= m; i++) {
+        for (let j = 0; j <= n; j++) {
+          if (i === 0) {
+            dp[i][j] = j
+          } else if (j === 0) {
+            dp[i][j] = i
+          } else if (str1[i - 1] === str2[j - 1]) {
+            dp[i][j] = dp[i - 1][j - 1]
+          } else {
+            dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+          }
+        }
+      }
+
+      return dp[m][n]
+    }
+
+    const distance = levenshteinDistance(string1, string2)
+    const maxLength = Math.max(string1.length, string2.length)
+    const similarityPercentage = ((maxLength - distance) / maxLength) * 100
+
+    return similarityPercentage
+  }
+
   const timeInSeconds = Math.round(timer.getTime() / 1000)
   const grossWPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
-  const netWPM = 0
-  const accuracy = calculateArrayEquality()
-  console.log(grossWPM)
-  console.log(accuracy)
+  const netWPM = calculateNetWPM(grossWPM, errorsByUser, timeInSeconds).toFixed(0)
+  const accuracy = calculateStringSimilarity(textArray.join(''), allTypedCharacters.join('')).toFixed(0)
+
+  return { netWPM, accuracy }
 }
 
 function winHandler () {
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
-  wordsPerMinutesCalculator()
+  const statistics = statisticCalculator()
+  console.log('WPM: ' + statistics.netWPM)
+  console.log('Accuracy: ' + statistics.accuracy)
 }
 
 function keyboardHandler () {
