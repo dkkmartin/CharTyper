@@ -17,7 +17,7 @@ let timer
 // Fetch text, clean text
 async function getTextFromApi () {
   // Get the quote from API
-  const textData = 'Ben 10 ben 10 ben 10'
+  const textData = 'martin martin2 martin3'
   // const textData = await getQoute('50')
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
@@ -50,11 +50,14 @@ function displayText () {
 }
 
 function keyPressHandler (e) {
+  wordHighlighter()
+  characterHighlighter()
   // Get the first character in the current word
   const firstCharInWord = currentWord[iteratorChar]
   if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ]/)) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
+    // Push all typed characters to compare equality later
     allTypedCharacters.push(e.key)
     // If typed character is not equal to first character in word
     // We dont actually need this if we are to support wrong typed words
@@ -92,6 +95,8 @@ function keyPressHandler (e) {
       typedCharacterArray = []
       // Words typed is increased as we typed the word
       wordsTyped++
+      // Reset input
+      wordInputHandler()
     }
   }
   if (wordsTyped === textArray.length) {
@@ -175,6 +180,40 @@ function removeKeyboardListener () {
   document.removeEventListener('keydown', keyPressHandler)
 }
 
+function wordHighlighter () {
+  const allWordsOnScreen = document.querySelectorAll('#text p')
+  const previousCurrentWordElement = allWordsOnScreen[iteratorWord - 1]
+  const currentWordElement = allWordsOnScreen[iteratorWord]
+  const nextWordElement = allWordsOnScreen[iteratorWord + 1]
+
+  currentWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
+  currentWordElement.classList.add('current')
+  if (previousCurrentWordElement) {
+    previousCurrentWordElement.style.backgroundColor = 'rgb(20, 20, 20)'
+    previousCurrentWordElement.classList.remove('current')
+  }
+  if (nextWordElement) {
+    nextWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
+  }
+}
+
+// Fix this
+function characterHighlighter () {
+  const allWordsOnScreen = document.querySelectorAll('#text p')
+  const currentWordElement = allWordsOnScreen[iteratorWord]
+  const currentWordArray = currentWordElement.textContent.split('')
+  currentWordElement.textContent = ''
+  currentWordArray.forEach((word, index) => {
+    currentWordElement.innerHTML += `
+    <div class="char__${index + 1}">
+      <p>${word}</p>
+    </div>
+  `
+  })
+
+  console.log(currentWordArray)
+}
+
 function textCleaner (text) {
   const corrections = {
     '!': '',
@@ -184,7 +223,6 @@ function textCleaner (text) {
     ';': '',
     '.': '',
     ',': '',
-    '\'': '',
     '-': ''
   }
   Object.keys(corrections).forEach(key => {
@@ -201,6 +239,20 @@ function animationWrong () {
   )
 }
 
+function wordInputHandler () {
+  const input = document.querySelector('#word__input')
+  // Stupid fix for deleting input value because of eventListeners listening on keydown
+  // Creating a delay fixes this issue
+  delay(1).then(() => {
+    input.value = ''
+  })
+  input.focus()
+}
+
+function delay (time) {
+  return new Promise(resolve => setTimeout(resolve, time))
+}
+
 function startTimer () {
   timer = new Timer()
   timer.start()
@@ -215,6 +267,8 @@ export default function runGame () {
     displayText()
     keyboardHandler()
     startTimer()
+    wordInputHandler()
+    wordHighlighter()
   })
 }
 
