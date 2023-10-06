@@ -4,21 +4,31 @@ import { animate } from 'motion'
 
 // eslint-disable-next-line prefer-const
 let iteratorWord = 0
+// eslint-disable-next-line prefer-const
 let iteratorChar = 0
+// eslint-disable-next-line prefer-const
 let wordsTyped = 0
+// eslint-disable-next-line prefer-const
 let errorsByUser = 0
+// eslint-disable-next-line prefer-const
 let currentWord
+// eslint-disable-next-line prefer-const
 let textArray
+// eslint-disable-next-line prefer-const
 let typedCharacterArray = []
+// eslint-disable-next-line prefer-const
 let allTypedCharacters = []
+// eslint-disable-next-line prefer-const
 let timerInterval
+// eslint-disable-next-line prefer-const
 let timer
+// eslint-disable-next-line prefer-const
+let hasItRunOnce = false
 
 // Fetch text, clean text
 async function getTextFromApi () {
   // Get the quote from API
-  const textData = 'martin martin2 martin3'
-  // const textData = await getQoute('50')
+  const textData = await getQoute('50')
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
@@ -36,7 +46,7 @@ function displayText () {
   const textDiv = document.querySelector('#text')
   // Loop over every word in array and make new p elements then append to div
   textArray.forEach((word, index) => {
-    const newPElement = document.createElement('p')
+    const newPElement = document.createElement('div')
     // If the index is not even then it must be whitespace
     if (index % 2 === 0) {
       newPElement.classList.add('word')
@@ -50,10 +60,13 @@ function displayText () {
 }
 
 function keyPressHandler (e) {
-  wordHighlighter()
-  characterHighlighter()
   // Get the first character in the current word
   const firstCharInWord = currentWord[iteratorChar]
+  if (!hasItRunOnce) {
+    wordHighlighter()
+    characterElementMaker()
+    hasItRunOnce = true
+  }
   if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ]/)) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
@@ -65,10 +78,10 @@ function keyPressHandler (e) {
       // Trigger wrong feedback to user
       console.log('wrong')
       errorsByUser++
-      console.log('Erros made: ' + errorsByUser)
       // Else it must be right character
     } else {
       // Trigger correct feedback to user
+      characterHighlighterCorrect()
       iteratorChar++
       console.log('Correct')
     }
@@ -82,6 +95,7 @@ function keyPressHandler (e) {
     const arrayToString = typedCharacterArray.join('')
     // If it matches we have typed the word correct and can go to next word
     if (arrayToString === currentWord) {
+      hasItRunOnce = false
       // iterator increases so we get the next word
       iteratorWord++
       // Reset iterator for char so it starts from the start
@@ -105,7 +119,6 @@ function keyPressHandler (e) {
     // Run win function
     winHandler()
   }
-  console.log(typedCharacterArray)
 }
 
 function statisticCalculator () {
@@ -181,7 +194,7 @@ function removeKeyboardListener () {
 }
 
 function wordHighlighter () {
-  const allWordsOnScreen = document.querySelectorAll('#text p')
+  const allWordsOnScreen = document.querySelectorAll('#text > div')
   const previousCurrentWordElement = allWordsOnScreen[iteratorWord - 1]
   const currentWordElement = allWordsOnScreen[iteratorWord]
   const nextWordElement = allWordsOnScreen[iteratorWord + 1]
@@ -191,15 +204,16 @@ function wordHighlighter () {
   if (previousCurrentWordElement) {
     previousCurrentWordElement.style.backgroundColor = 'rgb(20, 20, 20)'
     previousCurrentWordElement.classList.remove('current')
+    // Reset content of last element
+    previousCurrentWordElement.textContent = textArray[iteratorWord - 1]
   }
   if (nextWordElement) {
     nextWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
   }
 }
 
-// Fix this
-function characterHighlighter () {
-  const allWordsOnScreen = document.querySelectorAll('#text p')
+function characterElementMaker () {
+  const allWordsOnScreen = document.querySelectorAll('#text > div')
   const currentWordElement = allWordsOnScreen[iteratorWord]
   const currentWordArray = currentWordElement.textContent.split('')
   currentWordElement.textContent = ''
@@ -210,8 +224,28 @@ function characterHighlighter () {
     </div>
   `
   })
+}
 
-  console.log(currentWordArray)
+function characterHighlighterCorrect () {
+  const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+  const string1 = textArray.join('')
+  const string2 = typedCharacterArray.join('')
+
+  // Check if the currently typed characters match the characters in the text
+  const isCorrect = string1.startsWith(string2)
+
+  if (isCorrect) {
+    currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
+  } else {
+    // If the typed characters don't match the expected characters, stop highlighting
+    currentCharElement.style.backgroundColor = ''
+  }
+}
+
+function characterHighlighterWrong () {
+  const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+  nextCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1);'
+  console.log(nextCharElement)
 }
 
 function textCleaner (text) {
