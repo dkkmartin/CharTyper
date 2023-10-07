@@ -33,12 +33,10 @@ async function getTextFromApi () {
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
   textArray = cleanedText.split(' ')
-  // Makes a space between every word
-  for (let i = 1; i < textArray.length; i += 2) {
-    textArray.splice(i, 0, ' ')
-  }
+  // Add whitespace after every word in the index
+  const spacedTextArray = addWhitespaceAtEnd(textArray)
+  textArray = spacedTextArray
   currentWord = textArray[iteratorWord]
-  console.log(textArray)
 }
 
 // Display the text on the screen
@@ -47,28 +45,22 @@ function displayText () {
   // Loop over every word in array and make new p elements then append to div
   textArray.forEach((word, index) => {
     const newPElement = document.createElement('div')
-    // If the index is not even then it must be whitespace
-    if (index % 2 === 0) {
-      newPElement.classList.add('word')
-    } else {
-      // Add class space for whitespace
-      newPElement.classList.add('space')
-    }
+    newPElement.classList.add('word')
     newPElement.textContent = word
     textDiv.appendChild(newPElement)
   })
 }
 
+function addWhitespaceAtEnd (inputArray) {
+  const resultArray = inputArray.map((item, index) => (index < inputArray.length - 1) ? item + ' ' : item)
+  return resultArray
+}
+
 function keyPressHandler (e) {
   // Get the first character in the current word
   const firstCharInWord = currentWord[iteratorChar]
-  if (!hasItRunOnce) {
-    wordHighlighter()
-    characterElementMaker()
-    hasItRunOnce = true
-  }
-  // fix regex pattern for commas and stuff
-  if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ]/)) {
+
+  if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ',".]/)) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
     // Push all typed characters to compare equality later
@@ -116,9 +108,13 @@ function keyPressHandler (e) {
   }
   if (wordsTyped === textArray.length) {
     // If words typed are equal to the length of text array we have finished the race
-    console.log('No more words')
     // Run win function
     winHandler()
+  }
+  if (!hasItRunOnce) {
+    wordHighlighter()
+    characterElementMaker()
+    hasItRunOnce = true
   }
 }
 
@@ -206,54 +202,58 @@ function wordHighlighter () {
   const allWordsOnScreen = document.querySelectorAll('#text > div')
   const previousCurrentWordElement = allWordsOnScreen[iteratorWord - 1]
   const currentWordElement = allWordsOnScreen[iteratorWord]
-  const nextWordElement = allWordsOnScreen[iteratorWord + 1]
-
-  currentWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
-  currentWordElement.classList.add('current')
+  if (currentWord) {
+    currentWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
+    currentWordElement.classList.add('current')
+  }
   if (previousCurrentWordElement) {
     previousCurrentWordElement.style.backgroundColor = 'rgb(20, 20, 20)'
     previousCurrentWordElement.classList.remove('current')
     // Reset content of last element
     previousCurrentWordElement.textContent = textArray[iteratorWord - 1]
   }
-  if (nextWordElement) {
-    nextWordElement.style.backgroundColor = 'rgb(100, 100, 100)'
-  }
 }
 
 function characterElementMaker () {
-  const allWordsOnScreen = document.querySelectorAll('#text > div')
-  const currentWordElement = allWordsOnScreen[iteratorWord]
-  const currentWordArray = currentWordElement.textContent.split('')
-  currentWordElement.textContent = ''
-  currentWordArray.forEach((word, index) => {
-    currentWordElement.innerHTML += `
+  // If statement to make sure there are no more words to type
+  if (wordsTyped !== textArray.length) {
+    const allWordsOnScreen = document.querySelectorAll('#text > div')
+    const currentWordElement = allWordsOnScreen[iteratorWord]
+    const currentWordArray = currentWordElement.textContent.split('')
+    currentWordElement.textContent = ''
+    currentWordArray.forEach((word, index) => {
+      currentWordElement.innerHTML += `
     <div class="char__${index + 1}">
       <p>${word}</p>
     </div>
   `
-  })
+    })
+  }
 }
 
 function characterHighlighterCorrect () {
   const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
-  const string1 = textArray.join('')
+  const string1 = textArray[iteratorWord]
   const string2 = typedCharacterArray.join('')
-  currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
-  // Check if the currently typed characters match the characters in the text
-  const isCorrect = string1.startsWith(string2)
+
+  // Check if the currently typed character matches the corresponding character in the text
+  const isCorrect = string1[iteratorChar] === string2[iteratorChar]
+
   if (isCorrect) {
     currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
   } else {
-    // If the typed characters don't match the expected characters, stop highlighting
+    // If the typed character doesn't match the expected character, stop highlighting
     currentCharElement.style.backgroundColor = ''
   }
+}
+
+function undoCharacterHighlight () {
+
 }
 
 function characterHighlighterWrong () {
   const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
   nextCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1);'
-  console.log(nextCharElement)
 }
 
 function textCleaner (text) {
@@ -307,8 +307,8 @@ export default function runGame () {
     displayText()
     keyboardListeners()
     startTimer()
-    wordInputHandler()
     wordHighlighter()
+    wordInputHandler()
   })
 }
 
