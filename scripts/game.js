@@ -67,6 +67,7 @@ function keyPressHandler (e) {
     characterElementMaker()
     hasItRunOnce = true
   }
+  // fix regex pattern for commas and stuff
   if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ]/)) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
@@ -185,12 +186,20 @@ function winHandler () {
   console.log('Accuracy: ' + statistics.accuracy)
 }
 
-function keyboardHandler () {
+function keyboardListeners () {
   document.addEventListener('keydown', keyPressHandler)
+  document.querySelector('#word__input').addEventListener('keydown', disableControlA)
+}
+
+function disableControlA (e) {
+  if (e.ctrlKey && e.key === 'a') {
+    e.preventDefault() // Prevent the default Ctrl+A behavior
+  }
 }
 
 function removeKeyboardListener () {
   document.removeEventListener('keydown', keyPressHandler)
+  document.removeEventListener('keydown', disableControlA)
 }
 
 function wordHighlighter () {
@@ -230,10 +239,9 @@ function characterHighlighterCorrect () {
   const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
   const string1 = textArray.join('')
   const string2 = typedCharacterArray.join('')
-
+  currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
   // Check if the currently typed characters match the characters in the text
   const isCorrect = string1.startsWith(string2)
-
   if (isCorrect) {
     currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
   } else {
@@ -255,8 +263,6 @@ function textCleaner (text) {
     '"': '',
     ':': '',
     ';': '',
-    '.': '',
-    ',': '',
     '-': ''
   }
   Object.keys(corrections).forEach(key => {
@@ -299,7 +305,7 @@ function startTimer () {
 export default function runGame () {
   getTextFromApi().then(() => {
     displayText()
-    keyboardHandler()
+    keyboardListeners()
     startTimer()
     wordInputHandler()
     wordHighlighter()
