@@ -57,10 +57,16 @@ function addWhitespaceAtEnd (inputArray) {
 }
 
 function keyPressHandler (e) {
+  // Check if the input element is currently focused
+  const inputElement = document.querySelector('#word__input')
+  if (document.activeElement !== inputElement) {
+    return
+  }
+
   // Get the first character in the current word
   const firstCharInWord = currentWord[iteratorChar]
 
-  if (e.key.length === 1 && e.key.match(/[a-zA-Z0-9 ',".]/)) {
+  if (e.key.length === 1) {
     // Push the typed character to an array to check later if it matches
     typedCharacterArray.push(e.key)
     // Push all typed characters to compare equality later
@@ -70,6 +76,7 @@ function keyPressHandler (e) {
     if (e.key !== firstCharInWord) {
       errorsByUser++
       // Else it must be right character
+      characterHighlighterWrong()
       iteratorChar++
     } else {
       // Trigger correct feedback to user
@@ -234,23 +241,24 @@ function characterElementMaker () {
 }
 
 function characterHighlighterCorrect () {
-  const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
-  const string1 = textArray[iteratorWord]
-  const string2 = typedCharacterArray.join('')
+  if (iteratorChar < currentWord.length) {
+    const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+    const string1 = textArray[iteratorWord]
+    const string2 = typedCharacterArray.join('')
 
-  // Check if the currently typed character matches the corresponding character in the text
-  const isCorrect = string1[iteratorChar] === string2[iteratorChar]
+    // Check if the currently typed character matches the corresponding character in the text
+    const isCorrect = string1[iteratorChar] === string2[iteratorChar]
 
-  if (isCorrect) {
-    currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
-  } else {
-    // If the typed character doesn't match the expected character, stop highlighting
-    currentCharElement.style.backgroundColor = ''
+    if (isCorrect) {
+      currentCharElement.style.backgroundColor = 'rgba(99, 207, 95, 1)'
+    } else {
+      // If the typed character doesn't match the expected character, stop highlighting
+      currentCharElement.style.backgroundColor = ''
+    }
   }
 }
 
 function undoCharacterHighlight () {
-  console.log(iteratorChar)
   if (iteratorChar < currentWord.length) {
     const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
     nextCharElement.style.backgroundColor = ''
@@ -258,9 +266,23 @@ function undoCharacterHighlight () {
 }
 
 function characterHighlighterWrong () {
-  if (!iteratorChar > currentWord.length && !iteratorChar < currentWord.length) {
-    const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
-    nextCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1);'
+  if (iteratorChar < currentWord.length) {
+    const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+
+    if (currentCharElement) {
+      const string1 = textArray[iteratorWord]
+      const string2 = typedCharacterArray.join('')
+
+      // Check if the currently typed character matches the corresponding character in the text
+      const isCorrect = string1[iteratorChar] !== string2[iteratorChar]
+
+      if (isCorrect) {
+        currentCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1)'
+      } else {
+        // If the typed character doesn't match the expected character, stop highlighting
+        currentCharElement.style.backgroundColor = ''
+      }
+    }
   }
 }
 
