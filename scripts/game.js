@@ -68,17 +68,19 @@ function keyPressHandler (e) {
     // If typed character is not equal to first character in word
     // We dont actually need this if we are to support wrong typed words
     if (e.key !== firstCharInWord) {
-      // Trigger wrong feedback to user
-      console.log('wrong')
       errorsByUser++
       // Else it must be right character
+      iteratorChar++
     } else {
       // Trigger correct feedback to user
       characterHighlighterCorrect()
       iteratorChar++
-      console.log('Correct')
     }
   } else if (e.key === 'Backspace') {
+    if (!iteratorChar < 1) {
+      iteratorChar--
+    }
+    undoCharacterHighlight()
     typedCharacterArray.pop()
   }
 
@@ -248,12 +250,18 @@ function characterHighlighterCorrect () {
 }
 
 function undoCharacterHighlight () {
-
+  console.log(iteratorChar)
+  if (iteratorChar < currentWord.length) {
+    const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+    nextCharElement.style.backgroundColor = ''
+  }
 }
 
 function characterHighlighterWrong () {
-  const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
-  nextCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1);'
+  if (!iteratorChar > currentWord.length && !iteratorChar < currentWord.length) {
+    const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+    nextCharElement.style.backgroundColor = 'rgba(207, 95, 125, 1);'
+  }
 }
 
 function textCleaner (text) {
@@ -287,10 +295,9 @@ function wordInputHandler () {
     input.value = ''
   })
   input.focus()
-}
-
-function delay (time) {
-  return new Promise(resolve => setTimeout(resolve, time))
+  function delay (time) {
+    return new Promise(resolve => setTimeout(resolve, time))
+  }
 }
 
 function startTimer () {
