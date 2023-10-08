@@ -28,8 +28,7 @@ let hasItRunOnce = false
 // Fetch text, clean text
 async function getTextFromApi () {
   // Get the quote from API
-  const textData = 'Test'
-  // const textData = await getQoute('50')
+  const textData = await getQoute('50')
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
