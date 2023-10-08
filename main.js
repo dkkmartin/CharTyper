@@ -1,13 +1,10 @@
 import Game from './scripts/startGame.js'
 import getScoresFromDB from './scripts/getUserScores.js'
-import Timer from './scripts/timer.js'
 import Spinner from './scripts/spinner.js'
-import postDataToDB from './scripts/makeNewUserScore.js'
 import Cookies from 'js-cookie'
 import { v4 as uuidv4 } from 'uuid'
 
 const highscore = document.querySelector('.highscore')
-const spanElement = document.querySelector('span')
 const startGameBtn = document.querySelector('.play')
 
 window.onload = async () => {
@@ -25,9 +22,7 @@ window.onload = async () => {
 startGameBtn.addEventListener('click', async (e) => {
   e.preventDefault()
   Game.removeMenu()
-
-  startTimer()
-  keyboardHandler()
+  Game.startGame()
 })
 
 async function displayHighscores () {

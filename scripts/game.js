@@ -1,6 +1,6 @@
 import getQoute from './qouteAPI'
 import Timer from './timer'
-import { animate } from 'motion'
+import anime from 'animejs/lib/anime.es.js'
 
 // eslint-disable-next-line prefer-const
 let iteratorWord = 0
@@ -19,7 +19,7 @@ let typedCharacterArray = []
 // eslint-disable-next-line prefer-const
 let allTypedCharacters = []
 // eslint-disable-next-line prefer-const
-let timerInterval
+let timerInterval, statisticInterval
 // eslint-disable-next-line prefer-const
 let timer
 // eslint-disable-next-line prefer-const
@@ -28,7 +28,8 @@ let hasItRunOnce = false
 // Fetch text, clean text
 async function getTextFromApi () {
   // Get the quote from API
-  const textData = await getQoute('50')
+  const textData = 'Test'
+  // const textData = await getQoute('50')
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
@@ -128,20 +129,6 @@ function keyPressHandler (e) {
 }
 
 function statisticCalculator () {
-  // Calculate netWPM
-  function calculateNetWPM (grossWPM, errors, timeInSeconds) {
-    // Convert time in seconds to time in minutes
-    const timeInMinutes = timeInSeconds / 60
-
-    // Calculate error rate per minute
-    const errorRate = errors / timeInMinutes
-
-    // Calculate net WPM by subtracting the error rate from gross WPM
-    const netWPM = grossWPM - errorRate
-
-    return netWPM
-  }
-
   // Calculate accuracy with lavenshtein distance algorithm
   function calculateStringSimilarity (string1, string2) {
     function levenshteinDistance (str1, str2) {
@@ -175,18 +162,45 @@ function statisticCalculator () {
   }
 
   const timeInSeconds = Math.round(timer.getTime() / 1000)
-  const grossWPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
-  const netWPM = calculateNetWPM(grossWPM, errorsByUser, timeInSeconds).toFixed(0)
+  const charactersTyped = allTypedCharacters.length
+  const grossWPM = charactersTyped > 0 ? Math.floor((charactersTyped / 5) / (timeInSeconds / 60)) : 0
   const accuracy = calculateStringSimilarity(textArray.join(''), allTypedCharacters.join('')).toFixed(0)
+  // Convert accuracy to a decimal fraction
+  const accuracyFraction = accuracy / 100
+  const netWPM = Math.round(grossWPM * accuracyFraction)
 
-  return { netWPM, accuracy }
+  return { grossWPM, netWPM, accuracy }
+}
+
+function animationHandler () {
+  // Statistics div
+  anime({
+    targets: '#information',
+    translateY: function () {
+      return window.innerHeight / 6
+    },
+    width: '55%',
+    delay: 500,
+    duration: 1500,
+    easing: 'easeInOutQuart'
+  })
+  // Words div
+  anime({
+    targets: '#text',
+    opacity: 0,
+    delay: 500,
+    duration: 1000,
+    easing: 'linear'
+  })
 }
 
 function winHandler () {
+  animationHandler()
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
   const statistics = statisticCalculator()
+  console.log('GrossWPM: ' + statistics.grossWPM)
   console.log('WPM: ' + statistics.netWPM)
   console.log('Accuracy: ' + statistics.accuracy)
 }
@@ -301,14 +315,6 @@ function textCleaner (text) {
   return text
 }
 
-function animationWrong () {
-  animate(
-    '#time',
-    { x: [0, -25, 0, 25, 0, -25, 0, 25, 0], color: ['red', '#808080'] },
-    { duration: 0.5 }
-  )
-}
-
 function wordInputHandler () {
   const input = document.querySelector('#word__input')
   // Stupid fix for deleting input value because of eventListeners listening on keydown
@@ -331,14 +337,49 @@ function startTimer () {
   }, 100)
 }
 
+function updateStatisticsOnScreen () {
+  const accuracyElement = document.querySelector('#accuracy')
+  const wpmElement = document.querySelector('#WPM')
+
+  statisticInterval = setInterval(() => {
+    const statistics = statisticCalculator()
+    wpmElement.textContent = statistics.grossWPM
+    accuracyElement.textContent = statistics.accuracy + '%'
+  }, 100)
+}
+
+function prepareGameStart () {
+  const main = document.querySelector('main')
+  main.innerHTML = `
+  <div class="game">
+        <div id="information">
+          <div >
+            <h5>Accuracy</h3>
+            <h1 id="accuracy">0%</h1>
+          </div>
+          <div >
+            <h5>Time</h5>
+            <h1 id="time" >0</h1>
+          </div>
+          <div>
+            <h5>Words Per Minute</h5>
+            <h1 id="WPM">0</h1>
+          </div>
+        </div>
+        <div id="text"></div>
+        <input id="word__input" type="text" />
+      </div>
+  `
+}
+
 export default function runGame () {
   getTextFromApi().then(() => {
+    prepareGameStart()
     displayText()
     keyboardListeners()
     startTimer()
     wordHighlighter()
     wordInputHandler()
+    updateStatisticsOnScreen()
   })
 }
-
-runGame()

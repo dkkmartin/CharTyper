@@ -1,4 +1,4 @@
-import quoteAPI from './qouteAPI.js'
+import runGame from './game'
 
 export default class Game {
   static removeMenu () {
@@ -9,10 +9,10 @@ export default class Game {
   static async startTimer () {
     const main = document.querySelector('main')
     const newH1 = document.createElement('h1')
-    newH1.textContent = 5
+    newH1.textContent = 3
     newH1.classList.add('countdown')
     main.appendChild(newH1)
-    for (let index = 5; index >= 1; index--) {
+    for (let index = 3; index >= 1; index--) {
       newH1.textContent = index
       await delay(990)
       if (index === 1) {
@@ -24,14 +24,11 @@ export default class Game {
   static async startGame () {
     const highscoreDiv = document.querySelector('.highscore')
     highscoreDiv.remove()
-    await delay(5000)
-    const select = document.querySelector('select')
-    const qoute = await quoteAPI(select.value)
-    const gameDiv = document.querySelector('.app')
+    this.startTimer()
+    await delay(3000)
     const background = document.querySelector('.app__text')
     background.remove()
-    gameDiv.style.display = 'flex'
-    return qoute
+    runGame()
   }
 }
 
