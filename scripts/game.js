@@ -26,9 +26,9 @@ let timer
 let hasItRunOnce = false
 
 // Fetch text, clean text
-async function getTextFromApi () {
+async function getTextFromApi (length) {
   // Get the quote from API
-  const textData = await getQoute('50')
+  const textData = await getQoute(length)
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
@@ -171,8 +171,9 @@ function statisticCalculator () {
 }
 
 function animationHandler () {
-  // Statistics div
+  // Move statistics div
   anime({
+
     targets: '#information',
     translateY: function () {
       return window.innerHeight / 6
@@ -182,19 +183,27 @@ function animationHandler () {
     duration: 1500,
     easing: 'easeInOutQuart'
   })
-  // Words div
+  // Hide words div
   anime({
     targets: '#text',
     opacity: 0,
     delay: 500,
-    duration: 1000,
+    duration: 500,
     easing: 'linear'
   })
-
+  // Show WPM div
   anime({
     targets: '.netWPMcon',
     opacity: 1,
     delay: 500,
+    duration: 1000,
+    easing: 'linear'
+  })
+  // Show equals and X
+  anime({
+    targets: ['.fa-equals', '.fa-xmark'],
+    opacity: 1,
+    delay: 2000,
     duration: 1000,
     easing: 'linear'
   })
@@ -207,9 +216,6 @@ function winHandler () {
   timer.stop()
   clearInterval(timerInterval)
   const statistics = statisticCalculator()
-  console.log('GrossWPM: ' + statistics.grossWPM)
-  console.log('WPM: ' + statistics.netWPM)
-  console.log('Accuracy: ' + statistics.accuracy)
 }
 
 function keyboardListeners () {
@@ -364,17 +370,19 @@ function gameElements () {
   main.innerHTML = `
   <div class="game">
         <div id="information">
-          <div >
+        <div class="wpm__con">
+            <h5>WPM</h5>
+            <h1 id="WPM">0</h1>
+          </div>
+          <i class="fa-solid fa-xmark"></i>
+          <div class="accuracy__con">
             <h5>Accuracy</h3>
             <h1 id="accuracy">0%</h1>
           </div>
-          <div >
+          <i class="fa-solid fa-equals"></i>
+          <div class="time__con">
             <h5>Time</h5>
             <h1 id="time" >0</h1>
-          </div>
-          <div>
-            <h5>Words Per Minute</h5>
-            <h1 id="WPM">0</h1>
           </div>
         </div>
         <div id="text"></div>
@@ -384,20 +392,16 @@ function gameElements () {
 }
 
 function showNetWPMElement () {
-  const informationDiv = document.querySelector('#information')
-  const newDiv = document.createElement('div')
+  const timeDivH5 = document.querySelector('.time__con h5')
+  const timeDivH1 = document.querySelector('.time__con h1')
   const statistics = statisticCalculator()
-  newDiv.innerHTML = `
-  <div class="netWPMcon" >
-    <h5>net WPM</h3>
-    <h1 id="netWPM">${statistics.netWPM}</h1>
-  </div>
-  `
-  informationDiv.appendChild(newDiv)
+
+  timeDivH1.textContent = statistics.netWPM
+  timeDivH5.innerHTML = 'Net WPM'
 }
 
-export default function runGame () {
-  getTextFromApi().then(() => {
+export default async function runGame (length) {
+  getTextFromApi(length).then(() => {
     gameElements()
     displayText()
     keyboardListeners()

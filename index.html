@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CharTyper</title>
     <link rel="stylesheet" href="./styles/game.css" />
-    <link rel="stylesheet" href="./styles/fun.css" />
+    <link rel="stylesheet" href="./styles/bg_animation.css" />
     <link rel="stylesheet" href="./styles/style.css" />
     <script type="module" src="./main.js" defer></script>
     <script type="module" src="./scripts/bgText.js" defer></script>
-    <script src="anime.min.js"></script>
+    <script src="https://kit.fontawesome.com/42e26b8656.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <main>
@@ -24,17 +24,13 @@
         <div>
           <button class="play">start game</button>
           <select name="length" id="select__length">
-            <option value="50">50 chars</option>
-            <option value="80">80 chars</option>
-            <option value="100">100 chars</option>
-            <option value="150">150 chars</option>
-            <option value="200">200 chars</option>
+            <option value="100">easy</option>
+            <option value="180">medium</option>
+            <option value="250">hard</option>
           </select>
         </div>
       </div>
-      <div class="app__text">
-        <div class="mouse__mask"></div>
-      </div>
+      <div class="background_animation"></div>
     </main>
   </body>
 </html>

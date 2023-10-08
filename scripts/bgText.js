@@ -1,42 +1,252 @@
-const appDiv = document.querySelector('.app__text')
-const mask = document.querySelector('.mouse__mask')
+import anime from 'animejs'
+
+const randomWords = [
+  'apple',
+  'banana',
+  'chocolate',
+  'dolphin',
+  'elephant',
+  'flamingo',
+  'grape',
+  'hamburger',
+  'iguana',
+  'jazz',
+  'kangaroo',
+  'lemon',
+  'mango',
+  'ninja',
+  'octopus',
+  'penguin',
+  'quokka',
+  'raccoon',
+  'strawberry',
+  'tiger',
+  'umbrella',
+  'vampire',
+  'watermelon',
+  'xylophone',
+  'yak',
+  'zebra',
+  'accordion',
+  'butterfly',
+  'caterpillar',
+  'dog',
+  'elephant',
+  'flamingo',
+  'gorilla',
+  'hedgehog',
+  'iguana',
+  'jellyfish',
+  'kangaroo',
+  'lemur',
+  'monkey',
+  'narwhal',
+  'octopus',
+  'panda',
+  'quail',
+  'rhinoceros',
+  'sloth',
+  'toucan',
+  'unicorn',
+  'vulture',
+  'walrus',
+  'x-ray',
+  'yeti',
+  'zeppelin',
+  'butterfly',
+  'cactus',
+  'dolphin',
+  'elephant',
+  'falcon',
+  'gazelle',
+  'hedgehog',
+  'iguana',
+  'jaguar',
+  'kangaroo',
+  'lemur',
+  'mongoose',
+  'narwhal',
+  'octopus',
+  'panda',
+  'quokka',
+  'rhinoceros',
+  'sloth',
+  'toucan',
+  'unicorn',
+  'vulture',
+  'walrus',
+  'x-ray',
+  'yeti',
+  'zeppelin',
+  'acrobatics',
+  'bicycle',
+  'chimney',
+  'dandelion',
+  'elevator',
+  'fireplace',
+  'guitar',
+  'hurricane',
+  'iceberg',
+  'jigsaw',
+  'kite',
+  'lighthouse',
+  'microscope',
+  'nail',
+  'ocean',
+  'parachute',
+  'quilt',
+  'rocket',
+  'saxophone',
+  'tornado',
+  'umbrella',
+  'violin',
+  'waterfall',
+  'xylophone',
+  'yacht',
+  'zeppelin',
+  'time',
+  'year',
+  'people',
+  'way',
+  'day',
+  'man',
+  'thing',
+  'woman',
+  'life',
+  'child',
+  'world',
+  'school',
+  'state',
+  'family',
+  'student',
+  'group',
+  'country',
+  'problem',
+  'hand',
+  'part',
+  'place',
+  'case',
+  'week',
+  'company',
+  'system',
+  'program',
+  'question',
+  'work',
+  'government',
+  'number',
+  'night',
+  'point',
+  'home',
+  'water',
+  'room',
+  'mother',
+  'area',
+  'money',
+  'story',
+  'fact',
+  'month',
+  'lot',
+  'right',
+  'study',
+  'book',
+  'eye',
+  'job',
+  'word',
+  'business',
+  'issue',
+  'side',
+  'kind',
+  'head',
+  'house',
+  'service',
+  'friend',
+  'father',
+  'power',
+  'hour',
+  'game',
+  'line',
+  'end',
+  'member',
+  'law',
+  'car',
+  'city',
+  'community',
+  'name',
+  'president',
+  'team',
+  'minute',
+  'idea',
+  'kid',
+  'body',
+  'information',
+  'back',
+  'parent',
+  'face',
+  'others',
+  'level',
+  'office',
+  'door',
+  'health',
+  'person',
+  'art',
+  'war',
+  'history',
+  'party',
+  'result',
+  'change',
+  'morning',
+  'reason',
+  'research',
+  'girl',
+  'guy',
+  'moment',
+  'air',
+  'teacher',
+  'force',
+  'education'
+]
+const textDiv = document.querySelector('.background_animation')
+const pickedWords = []
+const usedWordIndices = new Set()
 let pElements
 
-function makeElementToGrid () {
-  for (let i = 0; i < 399; i++) {
-    const newP = document.createElement('p')
-    newP.textContent = 0
-    appDiv.appendChild(newP)
+function getRandomWord (number) {
+  // Make sure we have enough words to choose from
+  if (number > randomWords.length) {
+    console.log('Not enough unique words available.')
+    return
   }
-  pElements = document.querySelectorAll('.app__text p')
+
+  while (pickedWords.length < number) {
+    const randomNumber = Math.floor(Math.random() * randomWords.length)
+
+    // Check if the word has already been picked
+    if (!usedWordIndices.has(randomNumber)) {
+      pickedWords.push(randomWords[randomNumber])
+      usedWordIndices.add(randomNumber) // Mark the word as used
+    }
+  }
 }
 
-function getRandomChar () {
-  const chars = 'abcdefghijklmnopqrstuvwxyz'
-  return chars[Math.floor(Math.random() * 26)]
-}
-
-function randomNumbersLoop () {
-  pElements.forEach((element) => {
-    element.textContent = getRandomChar()
+function displayRandomWord () {
+  pickedWords.forEach(word => {
+    const newP = document.createElement('p')
+    newP.textContent = word
+    textDiv.appendChild(newP)
   })
+  pElements = document.querySelectorAll('.background_animation p')
 }
 
-document.addEventListener('mousemove', (e) => {
-  mask.style.top = e.pageY - 2500 + 'px'
-  mask.style.left = e.pageX - 2500 + 'px'
-  mask.style.animation = 'initial'
-})
+if (screen.height === 1080) {
+  getRandomWord(160)
+  displayRandomWord()
+} else if (screen.height === 1440) {
+  getRandomWord(350)
+  displayRandomWord()
+}
 
-document.addEventListener('mouseout', () => {
-  mask.style.top = 'calc(50% - 2500px)'
-  mask.style.left = 'calc(50% - 2500px)'
-  mask.style.animation = 'maskSpin 10s infinite linear forwards'
-  mask.style.animationDelay = '5s'
+anime({
+  targets: pElements,
+  opacity: [0, 1],
+  delay: anime.stagger(100)
 })
-
-makeElementToGrid()
-randomNumbersLoop()
-setInterval(() => {
-  randomNumbersLoop()
-}, 1000)

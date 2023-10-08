@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 const highscore = document.querySelector('.highscore')
 const startGameBtn = document.querySelector('.play')
+const lengthSelector = document.querySelector('#select__length')
 
 window.onload = async () => {
   const spinner = new Spinner()
@@ -22,7 +23,7 @@ window.onload = async () => {
 startGameBtn.addEventListener('click', async (e) => {
   e.preventDefault()
   Game.removeMenu()
-  Game.startGame()
+  Game.startGame(lengthSelector.value)
 })
 
 async function displayHighscores () {

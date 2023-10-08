@@ -21,11 +21,18 @@
 
 #information {
   display: flex;
+  align-items: center;
+  gap: 0.2em;
   justify-content: space-evenly;
-  width: 100%;
+  width: 70%;
 }
 
-#information div {
+#information i {
+  opacity: 0;
+  font-size: 50px;
+}
+
+#information > div {
   padding: 1rem;
   border: 1px solid white;
   border-radius: 20px;

@@ -6,7 +6,7 @@ export default class Game {
     buttonsDiv.style.display = 'none'
   }
 
-  static async startTimer () {
+  static async startCountdown () {
     const main = document.querySelector('main')
     const newH1 = document.createElement('h1')
     newH1.textContent = 3
@@ -21,14 +21,14 @@ export default class Game {
     }
   }
 
-  static async startGame () {
+  static async startGame (length) {
     const highscoreDiv = document.querySelector('.highscore')
     highscoreDiv.remove()
-    this.startTimer()
+    this.startCountdown()
     await delay(3000)
     const background = document.querySelector('.app__text')
     background.remove()
-    runGame()
+    runGame(length)
   }
 }
 
