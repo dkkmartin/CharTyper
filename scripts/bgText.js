@@ -207,24 +207,12 @@ const randomWords = [
 ]
 const textDiv = document.querySelector('.background_animation')
 const pickedWords = []
-const usedWordIndices = new Set()
 let pElements
 
 function getRandomWord (number) {
-  // Make sure we have enough words to choose from
-  if (number > randomWords.length) {
-    console.log('Not enough unique words available.')
-    return
-  }
-
-  while (pickedWords.length < number) {
+  for (let index = 0; index < number; index++) {
     const randomNumber = Math.floor(Math.random() * randomWords.length)
-
-    // Check if the word has already been picked
-    if (!usedWordIndices.has(randomNumber)) {
-      pickedWords.push(randomWords[randomNumber])
-      usedWordIndices.add(randomNumber) // Mark the word as used
-    }
+    pickedWords.push(randomWords[randomNumber])
   }
 }
 
@@ -237,16 +225,12 @@ function displayRandomWord () {
   pElements = document.querySelectorAll('.background_animation p')
 }
 
-if (screen.height === 1080) {
-  getRandomWord(160)
-  displayRandomWord()
-} else if (screen.height === 1440) {
-  getRandomWord(350)
-  displayRandomWord()
-}
+getRandomWord(200)
+displayRandomWord()
 
 anime({
   targets: pElements,
   opacity: [0, 1],
-  delay: anime.stagger(100)
+  delay: anime.stagger(10, { from: 'center' })
+
 })
