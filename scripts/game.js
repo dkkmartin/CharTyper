@@ -161,8 +161,7 @@ function statisticCalculator () {
   }
 
   const timeInSeconds = Math.round(timer.getTime() / 1000)
-  const charactersTyped = allTypedCharacters.length
-  const grossWPM = charactersTyped > 0 ? Math.floor((charactersTyped / 5) / (timeInSeconds / 60)) : 0
+  const grossWPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
   const accuracy = calculateStringSimilarity(textArray.join(''), allTypedCharacters.join('')).toFixed(0)
   // Convert accuracy to a decimal fraction
   const accuracyFraction = accuracy / 100
@@ -191,9 +190,18 @@ function animationHandler () {
     duration: 1000,
     easing: 'linear'
   })
+
+  anime({
+    targets: '.netWPMcon',
+    opacity: 1,
+    delay: 500,
+    duration: 1000,
+    easing: 'linear'
+  })
 }
 
 function winHandler () {
+  showNetWPMElement()
   animationHandler()
   removeKeyboardListener()
   timer.stop()
@@ -342,12 +350,16 @@ function updateStatisticsOnScreen () {
 
   statisticInterval = setInterval(() => {
     const statistics = statisticCalculator()
-    wpmElement.textContent = statistics.grossWPM
+    if (statistics.grossWPM === Infinity) {
+      wpmElement.textContent = '0'
+    } else {
+      wpmElement.textContent = statistics.grossWPM
+    }
     accuracyElement.textContent = statistics.accuracy + '%'
   }, 100)
 }
 
-function prepareGameStart () {
+function gameElements () {
   const main = document.querySelector('main')
   main.innerHTML = `
   <div class="game">
@@ -371,9 +383,22 @@ function prepareGameStart () {
   `
 }
 
+function showNetWPMElement () {
+  const informationDiv = document.querySelector('#information')
+  const newDiv = document.createElement('div')
+  const statistics = statisticCalculator()
+  newDiv.innerHTML = `
+  <div class="netWPMcon" >
+    <h5>net WPM</h3>
+    <h1 id="netWPM">${statistics.netWPM}</h1>
+  </div>
+  `
+  informationDiv.appendChild(newDiv)
+}
+
 export default function runGame () {
   getTextFromApi().then(() => {
-    prepareGameStart()
+    gameElements()
     displayText()
     keyboardListeners()
     startTimer()
