@@ -225,7 +225,7 @@ function displayRandomWord () {
   pElements = document.querySelectorAll('.background_animation p')
 }
 
-getRandomWord(200)
+getRandomWord(220)
 displayRandomWord()
 
 anime({

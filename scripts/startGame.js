@@ -26,7 +26,7 @@ export default class Game {
     highscoreDiv.remove()
     this.startCountdown()
     await delay(3000)
-    const background = document.querySelector('.app__text')
+    const background = document.querySelector('.background_animation')
     background.remove()
     runGame(length)
   }
