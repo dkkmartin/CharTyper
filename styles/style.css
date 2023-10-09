@@ -1,3 +1,17 @@
+body {
+  background-color: black;
+  color: white;
+  font-family: 'Major Mono Display', monospace;
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+}
+
+main {
+  height: 100%;
+}
+
 .ml11 {
   font-weight: 700;
   font-size: 3.5em;
@@ -38,7 +52,7 @@
   gap: 2em;
   top: 50%;
   right: 50%;
-  transform: translate(50%);
+  transform: translate(50%, -50%);
   z-index: 10;
 }
 
@@ -66,7 +80,10 @@
 
 .highscore {
   position: absolute;
+  top: 1em;
+  left: 1em;
   max-width: 275px;
+  opacity: 0;
 }
 
 .flex__con {
