@@ -215,7 +215,6 @@ function winHandler () {
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
-  const statistics = statisticCalculator()
 }
 
 function keyboardListeners () {
