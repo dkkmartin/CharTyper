@@ -3,22 +3,25 @@ import { removeNonUsedDiv } from './bgText'
 
 const textWrapper = document.querySelector('.ml11 .letters')
 textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>")
+const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)') === true || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
 let pElements, gridCol, gridRow
 
-document.addEventListener('DOMContentLoaded', () => {
-  removeNonUsedDiv()
-  pElements = document.querySelectorAll('.background_animation p')
-  // Usage example:
-  const totalCells = pElements.length // Replace with the actual total number of cells
-  const cellWidth = 100 // Replace with the width of each cell in pixels
+if (!isReduced) {
+  document.addEventListener('DOMContentLoaded', () => {
+    removeNonUsedDiv()
+    pElements = document.querySelectorAll('.background_animation p')
+    // Usage example:
+    const totalCells = pElements.length // Replace with the actual total number of cells
+    const cellWidth = 100 // Replace with the width of each cell in pixels
 
-  const { numRows, numColumns } = calculateGridDimensions(totalCells, cellWidth)
-  gridRow = numRows + 1
-  gridCol = numColumns - 3
-  console.log(`Number of Rows: ${numRows}`)
-  console.log(`Number of Columns: ${numColumns}`)
-  console.log(pElements.length)
-})
+    const { numRows, numColumns } = calculateGridDimensions(totalCells, cellWidth)
+    gridRow = numRows + 1
+    gridCol = numColumns - 3
+    console.log(`Number of Rows: ${gridRow}`)
+    console.log(`Number of Columns: ${gridCol}`)
+    console.log(pElements.length)
+  })
+}
 
 function calculateGridDimensions (totalCells, cellWidth) {
   // Calculate the number of columns
@@ -67,64 +70,11 @@ export function animations () {
       delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
     }).add({
       targets: pElements,
-      translateX: anime.stagger(10, { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      translateY: anime.stagger(10, { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      rotateZ: anime.stagger([0, 90], { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      delay: anime.stagger(200, { grid: [gridCol, gridRow], from: 'center' }),
-      easing: 'easeInOutQuad'
-    }).add({
-      targets: pElements,
-      translateX: anime.stagger(10, { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      translateY: anime.stagger(10, { grid: [gridCol, gridRow], from: 'first', axis: 'y' }),
-      rotateZ: anime.stagger([0, 90], { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      delay: anime.stagger(200, { grid: [gridCol, gridRow], from: 'center' }),
-      easing: 'easeInOutQuad'
-    })
-    .add({
-      targets: pElements,
-      rotateZ: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      delay: anime.stagger(200, { grid: [gridCol, gridRow], from: 'center' }),
-      easing: 'easeInOutQuad'
-    })
-    .add({
-      targets: pElements,
-      scaleX: anime.stagger([1, 0.5], { grid: [gridCol, gridRow], from: 'center' }),
-      scaleY: anime.stagger([1, 0.5], { grid: [gridCol, gridRow], from: 'center' }),
-      rotate: anime.stagger([0, 180], { grid: [gridCol, gridRow], from: 'center' }),
-      delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
-    })
-    .add({
-      targets: pElements,
-      translateX: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      translateY: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      rotateZ: anime.stagger([-90, 90], { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
-    }).add({
-      targets: pElements,
-      translateX: anime.stagger(10, { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      translateY: anime.stagger(10, { grid: [gridCol, gridRow], from: 'first', axis: 'y' }),
-      rotateZ: anime.stagger([0, 90], { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      delay: anime.stagger(200, { grid: [gridCol, gridRow], from: 'center' }),
-      easing: 'easeInOutQuad'
-    })
-    .add({
-      targets: pElements,
-      rotateZ: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      delay: anime.stagger(200, { grid: [gridCol, gridRow], from: 'center' }),
-      easing: 'easeInOutQuad'
-    })
-    .add({
-      targets: pElements,
-      scaleX: anime.stagger([1, 0.5], { grid: [gridCol, gridRow], from: 'center' }),
-      scaleY: anime.stagger([1, 0.5], { grid: [gridCol, gridRow], from: 'center' }),
-      rotate: anime.stagger([0, 180], { grid: [gridCol, gridRow], from: 'center' }),
-      delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
-    })
-    .add({
-      targets: pElements,
-      translateX: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'x' }),
-      translateY: anime.stagger(20, { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
-      rotateZ: anime.stagger([-90, 90], { grid: [gridCol, gridRow], from: 'center', axis: 'y' }),
+      opacity: [1, 1],
+      scale: [
+        { value: 1, easing: 'easeOutSine', duration: 500 },
+        { value: 0.1, easing: 'easeInOutQuad', duration: 1200 }
+      ],
       delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
     })
 

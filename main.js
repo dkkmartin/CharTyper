@@ -8,12 +8,21 @@ import { v4 as uuidv4 } from 'uuid'
 const highscore = document.querySelector('.highscore')
 const startGameBtn = document.querySelector('.play')
 const lengthSelector = document.querySelector('#select__length')
+const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)') === true || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
 
 window.onload = async () => {
-  animations()
+  // If not true run animations
+  if (!isReduced) {
+    animations()
+  } else {
+    // Else No animations, and set highscore div opacity to 1
+    highscore.style.opacity = '1'
+  }
   const spinner = new Spinner()
   await displayHighscores()
-  animationsAfterAwait()
+  if (!isReduced) {
+    animationsAfterAwait()
+  }
   spinner.stop()
   console.log(Cookies.get())
   // If user doesn't have a ID, make one
