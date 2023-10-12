@@ -34,9 +34,14 @@ function calculateGridDimensions (totalCells, cellWidth) {
 }
 
 export function winAnimations () {
+  anime({
+    targets: '#word__input',
+    opacity: 0,
+    delay: 500,
+    duration: 1000
+  })
   // Move statistics div
   anime({
-
     targets: '#information',
     translateY: function () {
       return window.innerHeight / 6
@@ -67,6 +72,14 @@ export function winAnimations () {
     targets: ['.fa-equals', '.fa-xmark'],
     opacity: 1,
     delay: 2000,
+    duration: 1000,
+    easing: 'linear'
+  })
+  // Show your highscore div
+  anime({
+    targets: '.new_highscore__div',
+    opacity: [0, 1],
+    delay: 1500,
     duration: 1000,
     easing: 'linear'
   })

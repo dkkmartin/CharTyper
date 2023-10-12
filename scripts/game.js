@@ -2,6 +2,7 @@ import getQoute from './qouteAPI'
 import Timer from './timer'
 import Cookies from 'js-cookie'
 import { winAnimations } from './animations'
+import postDataToDB from './makeNewUserScore'
 
 // eslint-disable-next-line prefer-const
 let iteratorWord = 0
@@ -25,6 +26,8 @@ let timerInterval, statisticInterval
 let timer
 // eslint-disable-next-line prefer-const
 let hasItRunOnce = false
+// eslint-disable-next-line prefer-const
+let playAgainBtn, submitBtn
 
 // Fetch text, clean text
 async function getTextFromApi (length) {
@@ -172,14 +175,41 @@ function statisticCalculator () {
 }
 
 function winHandler () {
-  const statistics = statisticCalculator()
-  Cookies.set('WPM', statistics.netWPM)
-  console.log(Cookies.get('WPM'))
+  showHighscoreElement()
+  cookieHandler()
   showNetWPMElement()
   winAnimations()
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
+  if (typeof submitBtn !== 'undefined') {
+    submitBtn.addEventListener('click', async () => {
+      const nameInput = document.querySelector('.highscore__name__input')
+      const data = {
+        name: nameInput.value,
+        score: Cookies.get('netWPM'),
+        id: Cookies.get('ID')
+      }
+      await postDataToDB(data)
+      location.reload()
+    })
+  }
+  if (typeof playAgainBtn !== 'undefined') {
+    playAgainBtn.addEventListener('click', () => {
+      location.reload()
+    })
+  }
+}
+
+function cookieHandler () {
+  const statistics = statisticCalculator()
+  if (Cookies.get('netWPM')) {
+    if (Cookies.get('netWPM') < statistics.netWPM) {
+      Cookies.set('netWPM', statistics.netWPM)
+    }
+  } else {
+    Cookies.set('netWPM', statistics.netWPM)
+  }
 }
 
 function showHighscoreElement () {
@@ -187,16 +217,25 @@ function showHighscoreElement () {
   const gameDiv = document.querySelector('.game')
   const newDiv = document.createElement('div')
   newDiv.classList.add('new_highscore__div')
-  newDiv.innerHTML = `
-    <h1>Your current highscore is: ${Cookies.get('WPM')}</h1>
-  `
-  if (Cookies.get('WPM') < statistics.netWPM) {
+
+  if (Cookies.get('netWPM') < statistics.netWPM) {
     newDiv.innerHTML = `
-    <h1>Your new highscore is: ${Cookies.get('WPM')}</h1>
-    <h4>Enter your name</h4>
-    <input></input>
+    <h1>Your new highscore is: ${statistics.netWPM} WPM</h1>
+    <label>
+    Enter your name:
+    <input class="highscore__name__input"></input>
+    </label>
+    <button class="button__play button__play--submit">Submit highscore</button>
     `
+    submitBtn = document.querySelector('.button__play--submit')
+  } else {
+    newDiv.innerHTML = `
+    <h1>Your current highscore is: ${Cookies.get('netWPM')} WPM</h1>
+    <button class="button__play">Play again</button>
+  `
+    playAgainBtn = document.querySelector('.button__play')
   }
+  gameDiv.appendChild(newDiv)
 }
 
 function keyboardListeners () {
@@ -301,7 +340,8 @@ function textCleaner (text) {
     '"': '',
     ':': '',
     ';': '',
-    '-': ''
+    '-': '',
+    '…': ''
   }
   Object.keys(corrections).forEach(key => {
     text = text.replaceAll(key, corrections[key])

@@ -51,6 +51,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.2em;
+  justify-content: center;
 }
 
 .word {
@@ -77,26 +78,6 @@
   animation: countdown 1s infinite;
 }
 
-.user__input {
-  display: none;
-  flex-direction: column;
-  gap: 3em;
-  border: 1px solid white;
-  padding: 1em 3em;
-  border-radius: 50px;
-  order: 4;
-}
-
-.user__input label {
-  font-size: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1em;
-}
-
-.user__input input,
 #word__input {
   outline: none;
   border: none;
@@ -105,37 +86,53 @@
   color: white;
   font-size: 30px;
   font-family: 'JetBrains Mono', monospace;
-  padding: 0 1rem;
-  text-align: center;
-}
-
-#word__input {
   order: 3;
   text-align: start;
-  padding: 0;
 }
 
-.user__input input::placeholder {
-  opacity: 0.1;
-  font-style: italic;
+.highscore__name__input {
+  outline: none;
+  border: none;
+  background-color: inherit;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  font-size: 30px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.play__again {
+.button__play {
   background-color: black;
   color: rgba(255, 255, 255, 0.5);
-  font-size: 40px;
+  font-size: 30px;
   cursor: pointer;
   transition: color 0.5s, border 0.5s;
-  border: none;
+  border: 1px solid white;
+  border-radius: 25px;
+  padding: 1em;
   text-transform: uppercase;
 }
 
-.play__again:hover {
+.button__play:hover {
   color: white;
 }
 
 .current__highscore {
   order: 3;
+}
+
+.new_highscore__div {
+  order: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
+  position: absolute;
+  top: 5em;
+}
+
+#information {
+  order: 2;
 }
 
 @keyframes countdown {

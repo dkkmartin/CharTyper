@@ -2,6 +2,9 @@ const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)') === true
 
 function makeDivs (number) {
   const backgroundDiv = document.querySelector('.background_animation')
+  if (!backgroundDiv) {
+    return
+  }
   for (let index = 0; index < number; index++) {
     const element = document.createElement('p')
     backgroundDiv.appendChild(element)
