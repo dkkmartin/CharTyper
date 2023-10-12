@@ -33,6 +33,45 @@ function calculateGridDimensions (totalCells, cellWidth) {
   return { numRows, numColumns }
 }
 
+export function winAnimations () {
+  // Move statistics div
+  anime({
+
+    targets: '#information',
+    translateY: function () {
+      return window.innerHeight / 6
+    },
+    width: '55%',
+    delay: 500,
+    duration: 1500,
+    easing: 'easeInOutQuart'
+  })
+  // Hide words div
+  anime({
+    targets: '#text',
+    opacity: 0,
+    delay: 500,
+    duration: 500,
+    easing: 'linear'
+  })
+  // Show WPM div
+  anime({
+    targets: '.netWPMcon',
+    opacity: 1,
+    delay: 500,
+    duration: 1000,
+    easing: 'linear'
+  })
+  // Show equals and X
+  anime({
+    targets: ['.fa-equals', '.fa-xmark'],
+    opacity: 1,
+    delay: 2000,
+    duration: 1000,
+    easing: 'linear'
+  })
+}
+
 export function animations () {
   anime.timeline()
     .add({

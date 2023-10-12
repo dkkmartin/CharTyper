@@ -1,6 +1,7 @@
 import getQoute from './qouteAPI'
 import Timer from './timer'
-import anime from 'animejs/lib/anime.es.js'
+import Cookies from 'js-cookie'
+import { winAnimations } from './animations'
 
 // eslint-disable-next-line prefer-const
 let iteratorWord = 0
@@ -170,51 +171,32 @@ function statisticCalculator () {
   return { grossWPM, netWPM, accuracy }
 }
 
-function animationHandler () {
-  // Move statistics div
-  anime({
-
-    targets: '#information',
-    translateY: function () {
-      return window.innerHeight / 6
-    },
-    width: '55%',
-    delay: 500,
-    duration: 1500,
-    easing: 'easeInOutQuart'
-  })
-  // Hide words div
-  anime({
-    targets: '#text',
-    opacity: 0,
-    delay: 500,
-    duration: 500,
-    easing: 'linear'
-  })
-  // Show WPM div
-  anime({
-    targets: '.netWPMcon',
-    opacity: 1,
-    delay: 500,
-    duration: 1000,
-    easing: 'linear'
-  })
-  // Show equals and X
-  anime({
-    targets: ['.fa-equals', '.fa-xmark'],
-    opacity: 1,
-    delay: 2000,
-    duration: 1000,
-    easing: 'linear'
-  })
-}
-
 function winHandler () {
+  const statistics = statisticCalculator()
+  Cookies.set('WPM', statistics.netWPM)
+  console.log(Cookies.get('WPM'))
   showNetWPMElement()
-  animationHandler()
+  winAnimations()
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
+}
+
+function showHighscoreElement () {
+  const statistics = statisticCalculator()
+  const gameDiv = document.querySelector('.game')
+  const newDiv = document.createElement('div')
+  newDiv.classList.add('new_highscore__div')
+  newDiv.innerHTML = `
+    <h1>Your current highscore is: ${Cookies.get('WPM')}</h1>
+  `
+  if (Cookies.get('WPM') < statistics.netWPM) {
+    newDiv.innerHTML = `
+    <h1>Your new highscore is: ${Cookies.get('WPM')}</h1>
+    <h4>Enter your name</h4>
+    <input></input>
+    `
+  }
 }
 
 function keyboardListeners () {
