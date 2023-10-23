@@ -1,6 +1,6 @@
 import { registerUser, loginUser } from './pocketbaseAuths'
 import PocketBase from 'pocketbase'
-const pb = new PocketBase('http://api.martinbruun.dk')
+const pb = new PocketBase('https://api.martinbruun.dk')
 
 const loginDiv = document.querySelector('.login__button')
 const loginModal = document.querySelector('.login')
