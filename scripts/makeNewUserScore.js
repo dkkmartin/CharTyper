@@ -1,9 +1,13 @@
-export default async function postDataToDB (data) {
-  const response = await fetch('http://164.92.224.247:3000/api/data', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
+import PocketBase from 'pocketbase'
+
+const pb = new PocketBase('http://api.martinbruun.dk')
+
+export default async function postDataToDB(data) {
+  const record = await pb.collection('highscores').create(data)
+}
+
+const data = {
+  user: 'Martin',
+  time_created: '2022-01-01 10:00:00.123Z',
+  netWPM: 123
 }

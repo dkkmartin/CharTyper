@@ -47,12 +47,12 @@ Open in browser
 - Text highlighting:
 
   - [ ] Different color schemes for text highlighting based on typing accuracy
-  - [ ] Real-time progress tracking to show the user's typing speed and accuracy
+  - [x] Real-time progress tracking to show the user's typing speed and accuracy
   - [ ] Customizable sound effects and animations to provide engaging feedback while typing
 
 - User feedback when typing
 
-  - [ ] Real-time visual cues indicating correct and incorrect typed characters
+  - [x] Real-time visual cues indicating correct and incorrect typed characters
   - [ ] Sound effects and animations to provide immediate feedback
 
 - [ ] Integration of a leaderboard to allow users to compare their typing speed and accuracy with others

@@ -30,7 +30,7 @@ let hasItRunOnce = false
 let playAgainBtn, submitBtn
 
 // Fetch text, clean text
-async function getTextFromApi (length) {
+async function getTextFromApi(length) {
   // Get the quote from API
   const textData = await getQoute(length)
   // Clean the text for unwanted special characters
@@ -44,7 +44,7 @@ async function getTextFromApi (length) {
 }
 
 // Display the text on the screen
-function displayText () {
+function displayText() {
   const textDiv = document.querySelector('#text')
   // Loop over every word in array and make new p elements then append to div
   textArray.forEach((word, index) => {
@@ -55,12 +55,14 @@ function displayText () {
   })
 }
 
-function addWhitespaceAtEnd (inputArray) {
-  const resultArray = inputArray.map((item, index) => (index < inputArray.length - 1) ? item + ' ' : item)
+function addWhitespaceAtEnd(inputArray) {
+  const resultArray = inputArray.map((item, index) =>
+    index < inputArray.length - 1 ? item + ' ' : item
+  )
   return resultArray
 }
 
-function keyPressHandler (e) {
+function keyPressHandler(e) {
   // Check if the input element is currently focused
   const inputElement = document.querySelector('#word__input')
   if (document.activeElement !== inputElement) {
@@ -131,10 +133,10 @@ function keyPressHandler (e) {
   }
 }
 
-function statisticCalculator () {
+function statisticCalculator() {
   // Calculate accuracy with lavenshtein distance algorithm
-  function calculateStringSimilarity (string1, string2) {
-    function levenshteinDistance (str1, str2) {
+  function calculateStringSimilarity(string1, string2) {
+    function levenshteinDistance(str1, str2) {
       const m = str1.length
       const n = str2.length
 
@@ -149,7 +151,8 @@ function statisticCalculator () {
           } else if (str1[i - 1] === str2[j - 1]) {
             dp[i][j] = dp[i - 1][j - 1]
           } else {
-            dp[i][j] = 1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+            dp[i][j] =
+              1 + Math.min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
           }
         }
       }
@@ -165,8 +168,13 @@ function statisticCalculator () {
   }
 
   const timeInSeconds = Math.round(timer.getTime() / 1000)
-  const grossWPM = Math.floor((textArray.join(' ').length / 5) / (timeInSeconds / 60))
-  const accuracy = calculateStringSimilarity(textArray.join(''), allTypedCharacters.join('')).toFixed(0)
+  const grossWPM = Math.floor(
+    textArray.join(' ').length / 5 / (timeInSeconds / 60)
+  )
+  const accuracy = calculateStringSimilarity(
+    textArray.join(''),
+    allTypedCharacters.join('')
+  ).toFixed(0)
   // Convert accuracy to a decimal fraction
   const accuracyFraction = accuracy / 100
   const netWPM = Math.round(grossWPM * accuracyFraction)
@@ -174,7 +182,7 @@ function statisticCalculator () {
   return { grossWPM, netWPM, accuracy }
 }
 
-function winHandler () {
+function winHandler() {
   showHighscoreElement()
   cookieHandler()
   showNetWPMElement()
@@ -201,7 +209,7 @@ function winHandler () {
   }
 }
 
-function cookieHandler () {
+function cookieHandler() {
   const statistics = statisticCalculator()
   if (Cookies.get('netWPM')) {
     if (Cookies.get('netWPM') < statistics.netWPM) {
@@ -212,7 +220,7 @@ function cookieHandler () {
   }
 }
 
-function showHighscoreElement () {
+function showHighscoreElement() {
   const statistics = statisticCalculator()
   const gameDiv = document.querySelector('.game')
   const newDiv = document.createElement('div')
@@ -238,23 +246,25 @@ function showHighscoreElement () {
   gameDiv.appendChild(newDiv)
 }
 
-function keyboardListeners () {
+function keyboardListeners() {
   document.addEventListener('keydown', keyPressHandler)
-  document.querySelector('#word__input').addEventListener('keydown', disableControlA)
+  document
+    .querySelector('#word__input')
+    .addEventListener('keydown', disableControlA)
 }
 
-function disableControlA (e) {
+function disableControlA(e) {
   if (e.ctrlKey && e.key === 'a') {
     e.preventDefault() // Prevent the default Ctrl+A behavior
   }
 }
 
-function removeKeyboardListener () {
+function removeKeyboardListener() {
   document.removeEventListener('keydown', keyPressHandler)
   document.removeEventListener('keydown', disableControlA)
 }
 
-function wordHighlighter () {
+function wordHighlighter() {
   const allWordsOnScreen = document.querySelectorAll('#text > div')
   const previousCurrentWordElement = allWordsOnScreen[iteratorWord - 1]
   const currentWordElement = allWordsOnScreen[iteratorWord]
@@ -270,7 +280,7 @@ function wordHighlighter () {
   }
 }
 
-function characterElementMaker () {
+function characterElementMaker() {
   // If statement to make sure there are no more words to type
   if (wordsTyped !== textArray.length) {
     const allWordsOnScreen = document.querySelectorAll('#text > div')
@@ -287,9 +297,11 @@ function characterElementMaker () {
   }
 }
 
-function characterHighlighterCorrect () {
+function characterHighlighterCorrect() {
   if (iteratorChar < currentWord.length) {
-    const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+    const currentCharElement = document.querySelector(
+      `.char__${iteratorChar + 1}`
+    )
     const string1 = textArray[iteratorWord]
     const string2 = typedCharacterArray.join('')
 
@@ -305,16 +317,18 @@ function characterHighlighterCorrect () {
   }
 }
 
-function undoCharacterHighlight () {
+function undoCharacterHighlight() {
   if (iteratorChar < currentWord.length) {
     const nextCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
     nextCharElement.style.backgroundColor = ''
   }
 }
 
-function characterHighlighterWrong () {
+function characterHighlighterWrong() {
   if (iteratorChar < currentWord.length) {
-    const currentCharElement = document.querySelector(`.char__${iteratorChar + 1}`)
+    const currentCharElement = document.querySelector(
+      `.char__${iteratorChar + 1}`
+    )
 
     if (currentCharElement) {
       const string1 = textArray[iteratorWord]
@@ -333,7 +347,7 @@ function characterHighlighterWrong () {
   }
 }
 
-function textCleaner (text) {
+function textCleaner(text) {
   const corrections = {
     '!': '',
     '?': '',
@@ -343,13 +357,13 @@ function textCleaner (text) {
     '-': '',
     '…': ''
   }
-  Object.keys(corrections).forEach(key => {
+  Object.keys(corrections).forEach((key) => {
     text = text.replaceAll(key, corrections[key])
   })
   return text
 }
 
-function wordInputHandler () {
+function wordInputHandler() {
   const input = document.querySelector('#word__input')
   // Stupid fix for deleting input value because of eventListeners listening on keydown
   // Creating a delay fixes this issue
@@ -357,12 +371,12 @@ function wordInputHandler () {
     input.value = ''
   })
   input.focus()
-  function delay (time) {
-    return new Promise(resolve => setTimeout(resolve, time))
+  function delay(time) {
+    return new Promise((resolve) => setTimeout(resolve, time))
   }
 }
 
-function startTimer () {
+function startTimer() {
   timer = new Timer()
   timer.start()
   timerInterval = setInterval(() => {
@@ -371,7 +385,7 @@ function startTimer () {
   }, 100)
 }
 
-function updateStatisticsOnScreen () {
+function updateStatisticsOnScreen() {
   const accuracyElement = document.querySelector('#accuracy')
   const wpmElement = document.querySelector('#WPM')
 
@@ -386,7 +400,7 @@ function updateStatisticsOnScreen () {
   }, 100)
 }
 
-function gameElements () {
+function gameElements() {
   const main = document.querySelector('main')
   main.innerHTML = `
   <div class="game">
@@ -412,7 +426,7 @@ function gameElements () {
   `
 }
 
-function showNetWPMElement () {
+function showNetWPMElement() {
   const timeDivH5 = document.querySelector('.time__con h5')
   const timeDivH1 = document.querySelector('.time__con h1')
   const statistics = statisticCalculator()
@@ -421,7 +435,7 @@ function showNetWPMElement () {
   timeDivH5.innerHTML = 'Net WPM'
 }
 
-export default async function runGame (length) {
+export default async function runGame(length) {
   getTextFromApi(length).then(() => {
     gameElements()
     displayText()

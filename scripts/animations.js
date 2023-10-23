@@ -2,8 +2,13 @@ import anime from 'animejs'
 import { removeNonUsedDiv } from './bgText'
 
 const textWrapper = document.querySelector('.ml11 .letters')
-textWrapper.innerHTML = textWrapper.textContent.replace(/([^\x00-\x80]|\w)/g, "<span class='letter'>$&</span>")
-const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)') === true || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
+textWrapper.innerHTML = textWrapper.textContent.replace(
+  /([^\x00-\x80]|\w)/g,
+  "<span class='letter'>$&</span>"
+)
+const isReduced =
+  window.matchMedia('(prefers-reduced-motion: reduce)') === true ||
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
 let pElements, gridCol, gridRow
 
 if (!isReduced) {
@@ -14,16 +19,16 @@ if (!isReduced) {
     const totalCells = pElements.length // Replace with the actual total number of cells
     const cellWidth = 100 // Replace with the width of each cell in pixels
 
-    const { numRows, numColumns } = calculateGridDimensions(totalCells, cellWidth)
+    const { numRows, numColumns } = calculateGridDimensions(
+      totalCells,
+      cellWidth
+    )
     gridRow = numRows + 1
     gridCol = numColumns - 3
-    console.log(`Number of Rows: ${gridRow}`)
-    console.log(`Number of Columns: ${gridCol}`)
-    console.log(pElements.length)
   })
 }
 
-function calculateGridDimensions (totalCells, cellWidth) {
+function calculateGridDimensions(totalCells, cellWidth) {
   // Calculate the number of columns
   const numColumns = Math.floor(window.innerWidth / cellWidth)
 
@@ -33,7 +38,7 @@ function calculateGridDimensions (totalCells, cellWidth) {
   return { numRows, numColumns }
 }
 
-export function winAnimations () {
+export function winAnimations() {
   anime({
     targets: '#word__input',
     opacity: 0,
@@ -85,8 +90,9 @@ export function winAnimations () {
   })
 }
 
-export function animations () {
-  anime.timeline()
+export function animations() {
+  anime
+    .timeline()
     .add({
       targets: '.ml11 .line',
       scaleY: [0, 1],
@@ -96,23 +102,30 @@ export function animations () {
     })
     .add({
       targets: '.ml11 .line',
-      translateX: [0, document.querySelector('.ml11 .letters').getBoundingClientRect().width + 10],
+      translateX: [
+        0,
+        document.querySelector('.ml11 .letters').getBoundingClientRect().width +
+          10
+      ],
       easing: 'easeOutExpo',
       duration: 700,
       delay: 100
-    }).add({
+    })
+    .add({
       targets: '.ml11 .letter',
       opacity: [0, 1],
       easing: 'easeOutExpo',
       duration: 600,
       offset: '-=775',
       delay: (el, i) => 34 * (i + 1)
-    }).add({
+    })
+    .add({
       targets: '.line1',
       opacity: 0,
       duration: 1000,
       easing: 'easeOutExpo'
-    }).add({
+    })
+    .add({
       targets: pElements,
       opacity: [0, 1],
       scale: [
@@ -120,7 +133,8 @@ export function animations () {
         { value: 1, easing: 'easeInOutQuad', duration: 1200 }
       ],
       delay: anime.stagger(100, { grid: [gridCol, gridRow], from: 'center' })
-    }).add({
+    })
+    .add({
       targets: pElements,
       opacity: [1, 1],
       scale: [
@@ -138,7 +152,7 @@ export function animations () {
   })
 }
 
-export function animationsAfterAwait () {
+export function animationsAfterAwait() {
   const userHighscoreDivs = document.querySelectorAll('.user')
   anime({
     targets: '.highscore',
@@ -146,18 +160,17 @@ export function animationsAfterAwait () {
     delay: 1000
   })
 
-  anime.timeline()
+  anime
+    .timeline()
     .add({
       targets: userHighscoreDivs,
       scale: [0.5, 1],
       opacity: [0, 1],
       delay: anime.stagger(100, { start: 1600 }),
       easing: 'easeOutCubic'
-    }).add({
+    })
+    .add({
       targets: '.user__1',
-      keyframes: [
-        { scale: 1.02 },
-        { scale: 1 }
-      ]
+      keyframes: [{ scale: 1.02 }, { scale: 1 }]
     })
 }

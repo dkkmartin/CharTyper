@@ -1,12 +1,10 @@
-export default async function getScoresFromDB () {
-  try {
-    const response = await fetch('http://164.92.224.247:3000/api/data')
-    if (!response.ok) {
-      throw new Error('Response not ok')
-    }
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.log('Error: ', error)
-  }
+import PocketBase from 'pocketbase'
+
+export default async function getUsers() {
+  const pb = new PocketBase('http://api.martinbruun.dk')
+  const records = await pb.collection('highscores').getFullList({
+    sort: '-netWPM',
+    expand: 'user'
+  })
+  return records
 }

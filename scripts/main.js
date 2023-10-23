@@ -1,14 +1,16 @@
-import Game from './scripts/startGame.js'
-import getScoresFromDB from './scripts/getUserScores.js'
-import Spinner from './scripts/spinner.js'
+import Game from './startGame.js'
+import getScoresFromDB from './getUserScores.js'
+import Spinner from './spinner.js'
 import Cookies from 'js-cookie'
-import { animations, animationsAfterAwait } from './scripts/animations.js'
+import { animations, animationsAfterAwait } from './animations.js'
 import { v4 as uuidv4 } from 'uuid'
 
 const highscore = document.querySelector('.highscore')
 const startGameBtn = document.querySelector('.play')
 const lengthSelector = document.querySelector('#select__length')
-const isReduced = window.matchMedia('(prefers-reduced-motion: reduce)') === true || window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
+const isReduced =
+  window.matchMedia('(prefers-reduced-motion: reduce)') === true ||
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
 
 window.onload = async () => {
   // If not true run animations
@@ -38,16 +40,16 @@ startGameBtn.addEventListener('click', async (e) => {
   Game.startGame(lengthSelector.value)
 })
 
-async function displayHighscores () {
-  const data = Array.from(await getScoresFromDB())
-  data.sort((a, b) => b.score - a.score)
-  data.forEach((element, index) => {
+async function displayHighscores() {
+  const data = await getScoresFromDB()
+  console.log(data)
+  data.forEach((user, index) => {
     const newDiv = document.createElement('div')
     newDiv.classList.add('user')
     newDiv.classList.add(`user__${index + 1}`)
     newDiv.innerHTML = `
-    <p>${element.name}</p>
-    <p>${element.score}</p>
+    <p>${user.expand.user.username}</p>
+    <p>${user.netWPM}</p>
    `
     highscore.appendChild(newDiv)
   })
