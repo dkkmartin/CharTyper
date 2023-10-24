@@ -12,12 +12,13 @@ export async function registerUser(username, password) {
   } catch (error) {
     console.error(error)
   }
-  //loginUser(username, password)
+  loginUser(username, password)
 }
 
 export async function loginUser(username, password) {
   try {
     await pb.collection('users').authWithPassword(username, password)
+    console.log('Logged in as: ' + pb.authStore.token)
     return true
   } catch (error) {
     console.error(error)

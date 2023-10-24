@@ -101,10 +101,6 @@
   font-size: 40px;
 }
 
-#login__msg {
-  display: contents;
-}
-
 .login input::placeholder {
   opacity: 0.2;
   font-weight: 200;

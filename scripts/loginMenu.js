@@ -37,7 +37,6 @@ loginBtn.addEventListener('click', async (e) => {
   if (answer) {
     spinner.stop('ring-login')
     loginModal.style.display = 'none'
-    console.log('Logged in as: ' + pb.authStore.token)
   } else {
     spinner.stop('ring-login')
     loginMsg.textContent = 'error. try again'
