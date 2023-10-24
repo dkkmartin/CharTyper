@@ -24,7 +24,7 @@
   display: none;
   border: 1px solid white;
   width: 30%;
-  height: 30%;
+  height: 50%;
   border-radius: 25px;
   background-color: black;
   position: absolute;
@@ -35,10 +35,12 @@
 }
 
 .login form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 100px 1fr;
   align-items: center;
+  justify-items: center;
+  padding: 2em;
   height: 100%;
 }
 
@@ -77,11 +79,11 @@
   margin-top: 1em;
   cursor: pointer;
   font-size: 20px;
+  transition: transform 0.5s;
 }
 
 .login form button:hover {
-  transform: scale(1.1);
-  transition: transform 0.5s;
+  transform: scale(1.05);
 }
 
 .login label {
@@ -97,4 +99,21 @@
   right: 7%;
   cursor: pointer;
   font-size: 40px;
+}
+
+#login__msg {
+  display: contents;
+}
+
+.login input::placeholder {
+  opacity: 0.2;
+  font-weight: 200;
+}
+
+.login form input:valid:not(:placeholder-shown) {
+  border-bottom: 1px solid green;
+}
+
+.login form input:invalid:not(:placeholder-shown) {
+  border-bottom: 1px solid red;
 }

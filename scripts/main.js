@@ -21,11 +21,12 @@ window.onload = async () => {
     highscore.style.opacity = '1'
   }
   const spinner = new Spinner()
+  spinner.start('ring-highscore')
   await displayHighscores()
   if (!isReduced) {
     animationsAfterAwait()
   }
-  spinner.stop()
+  spinner.stop('ring-highscore')
   console.log(Cookies.get())
   // If user doesn't have a ID, make one
   if (!Cookies.get('ID')) {
@@ -43,14 +44,23 @@ startGameBtn.addEventListener('click', async (e) => {
 async function displayHighscores() {
   const data = await getScoresFromDB()
   console.log(data)
-  data.forEach((user, index) => {
-    const newDiv = document.createElement('div')
-    newDiv.classList.add('user')
-    newDiv.classList.add(`user__${index + 1}`)
-    newDiv.innerHTML = `
+  try {
+    let iterator = 1
+    data.forEach((user) => {
+      const newDiv = document.createElement('div')
+      newDiv.classList.add('user')
+      newDiv.classList.add(`user__${iterator}`)
+      if (!user.expand) {
+        return
+      }
+      iterator++
+      newDiv.innerHTML = `
     <p>${user.expand.user.username}</p>
     <p>${user.netWPM}</p>
    `
-    highscore.appendChild(newDiv)
-  })
+      highscore.appendChild(newDiv)
+    })
+  } catch (error) {
+    console.error(error)
+  }
 }

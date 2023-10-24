@@ -46,7 +46,7 @@
       <div class="highscore">
         <h3>highscore</h3>
         <div class="flex__con">
-          <div class="lds-dual-ring"></div>
+          <div class="lds-dual-ring ring-highscore"></div>
         </div>
       </div>
       <div class="buttons__con">
@@ -71,13 +71,29 @@
           <div class="login__div">
             <label>
               username:
-              <input id="username" type="text" />
+              <input
+                placeholder=" "
+                required
+                id="username"
+                type="text"
+                autocomplete="off"
+                minlength="3"
+              />
             </label>
             <label>
               password:
-              <input type="password" id="password" />
+              <input
+                placeholder=" "
+                required
+                type="password"
+                id="password"
+                autocomplete="off"
+                minlength="8"
+              />
             </label>
           </div>
+          <p id="login__msg"></p>
+          <div class="lds-dual-ring ring-login"></div>
           <div class="buttons__div">
             <button id="button__login">Login</button>
             <button id="button__register">Register</button>
@@ -86,7 +102,7 @@
       </div>
       <div class="login__button">
         <i class="fa-solid fa-user"></i>
-        <p>Login</p>
+        <p>login</p>
       </div>
       <div class="background_animation"></div>
     </main>

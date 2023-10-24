@@ -4,29 +4,15 @@ import Cookies from 'js-cookie'
 import { winAnimations } from './animations'
 import postDataToDB from './makeNewUserScore'
 
-// eslint-disable-next-line prefer-const
 let iteratorWord = 0
-// eslint-disable-next-line prefer-const
 let iteratorChar = 0
-// eslint-disable-next-line prefer-const
 let wordsTyped = 0
-// eslint-disable-next-line prefer-const
 let errorsByUser = 0
-// eslint-disable-next-line prefer-const
 let currentWord
-// eslint-disable-next-line prefer-const
 let textArray
-// eslint-disable-next-line prefer-const
 let typedCharacterArray = []
-// eslint-disable-next-line prefer-const
 let allTypedCharacters = []
-// eslint-disable-next-line prefer-const
 let timerInterval, statisticInterval
-// eslint-disable-next-line prefer-const
-let timer
-// eslint-disable-next-line prefer-const
-let hasItRunOnce = false
-// eslint-disable-next-line prefer-const
 let playAgainBtn, submitBtn
 
 // Fetch text, clean text

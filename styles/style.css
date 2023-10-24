@@ -113,6 +113,11 @@ main {
   width: 80px;
   height: 80px;
 }
+
+.ring-login {
+  position: static;
+  left: initial;
+}
 .lds-dual-ring:after {
   content: ' ';
   display: block;

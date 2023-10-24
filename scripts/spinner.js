@@ -1,11 +1,11 @@
 export default class Spinner {
-  start() {
-    const spinnerDiv = document.querySelector('.lds-dual-ring')
+  start(which) {
+    const spinnerDiv = document.querySelector(`.${which}`)
     spinnerDiv.style.display = 'block'
   }
 
-  stop() {
-    const spinnerDiv = document.querySelector('.lds-dual-ring')
+  stop(which) {
+    const spinnerDiv = document.querySelector(`.${which}`)
     spinnerDiv.style.display = 'none'
   }
 }
