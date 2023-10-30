@@ -15,6 +15,9 @@ spinner.stop('ring-login')
 
 loginDiv.addEventListener('click', () => {
   loginModal.style.display = 'block'
+  if (pb.authStore.isValid) {
+    loggedInMenu()
+  }
 })
 
 xmark.addEventListener('click', () => {
@@ -60,6 +63,17 @@ registerBtn.addEventListener('click', async (e) => {
     loginMsg.textContent = 'error. try again'
   }
 })
+
+function loggedInMenu() {
+  loginModal.innerHTML = ''
+  const menu = document.createElement('div')
+  menu.classList.add('login__user-menu')
+  menu.innerHTML = `
+    <p>hi, ${pb.authStore.model.username}</p>
+    <button>Logout</button>
+  `
+  loginModal.appendChild(menu)
+}
 
 function inputValidator() {
   const username = form.username.value

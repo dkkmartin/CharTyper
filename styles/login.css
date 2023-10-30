@@ -74,7 +74,8 @@
   gap: 1em;
 }
 
-.login form button {
+.login form button,
+.login__user-menu button {
   width: 30%;
   background-color: black;
   color: white;
@@ -118,4 +119,17 @@
 
 .login form input:invalid:not(:placeholder-shown) {
   border-bottom: 1px solid red;
+}
+
+.login__user-menu {
+  display: flex;
+  padding: 2em;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.login__user-menu p {
+  font-weight: bold;
 }
