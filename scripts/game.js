@@ -14,6 +14,8 @@ let typedCharacterArray = []
 let allTypedCharacters = []
 let timerInterval, statisticInterval
 let playAgainBtn, submitBtn
+let timer
+let hasItRunOnce = false
 
 // Fetch text, clean text
 async function getTextFromApi(length) {
