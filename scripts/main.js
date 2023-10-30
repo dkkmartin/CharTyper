@@ -4,6 +4,7 @@ import Spinner from './spinner.js'
 import Cookies from 'js-cookie'
 import { animations, animationsAfterAwait } from './animations.js'
 import { v4 as uuidv4 } from 'uuid'
+import { userLoggedIn } from './loginBar.js'
 
 const highscore = document.querySelector('.highscore')
 const startGameBtn = document.querySelector('.play')
@@ -14,6 +15,7 @@ const isReduced =
 
 window.onload = async () => {
   // If not true run animations
+  userLoggedIn()
   if (!isReduced) {
     animations()
   } else {
@@ -27,7 +29,6 @@ window.onload = async () => {
     animationsAfterAwait()
   }
   spinner.stop('ring-highscore')
-  console.log(Cookies.get())
   // If user doesn't have a ID, make one
   if (!Cookies.get('ID')) {
     const uniqueId = uuidv4()
@@ -43,7 +44,6 @@ startGameBtn.addEventListener('click', async (e) => {
 
 async function displayHighscores() {
   const data = await getScoresFromDB()
-  console.log(data)
   try {
     let iterator = 1
     data.forEach((user) => {
