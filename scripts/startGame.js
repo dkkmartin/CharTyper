@@ -1,12 +1,29 @@
 import runGame from './game'
+import getQoute from './qouteAPI'
 
 export default class Game {
-  static removeMenu () {
+  static removeMenu() {
     const buttonsDiv = document.querySelector('.buttons__con')
     buttonsDiv.style.display = 'none'
   }
 
-  static async startCountdown () {
+  static removeHighscore() {
+    const highscoreDiv = document.querySelector('.highscore')
+    highscoreDiv.remove()
+  }
+
+  static removeBackground() {
+    const background = document.querySelector('.background_animation')
+    background.remove()
+  }
+
+  static setGameMenu() {
+    const main = document.querySelector('main')
+    const mainHtml = main.innerHTML
+    main.innerHTML = mainHtml
+  }
+
+  static async startCountdown() {
     const main = document.querySelector('main')
     const newH1 = document.createElement('h1')
     newH1.textContent = 3
@@ -21,17 +38,17 @@ export default class Game {
     }
   }
 
-  static async startGame (length) {
-    const highscoreDiv = document.querySelector('.highscore')
-    highscoreDiv.remove()
+  static async startGame(length) {
+    const textData = await getQoute(length)
+    this.removeMenu()
+    this.removeHighscore()
     this.startCountdown()
     await delay(3000)
-    const background = document.querySelector('.background_animation')
-    background.remove()
-    runGame(length)
+    this.removeBackground()
+    runGame(textData)
   }
 }
 
-function delay (time) {
-  return new Promise(resolve => setTimeout(resolve, time))
+function delay(time) {
+  return new Promise((resolve) => setTimeout(resolve, time))
 }

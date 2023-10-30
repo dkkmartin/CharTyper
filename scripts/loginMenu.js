@@ -1,3 +1,4 @@
+import { loggedInBar } from './loginBar'
 import { registerUser, loginUser } from './pocketbaseAuths'
 import Spinner from './spinner'
 import PocketBase from 'pocketbase'
@@ -70,9 +71,19 @@ function loggedInMenu() {
   menu.classList.add('login__user-menu')
   menu.innerHTML = `
     <p>hi, ${pb.authStore.model.username}</p>
-    <button>Logout</button>
+    <button class="login__logout-btn" >Logout</button>
   `
   loginModal.appendChild(menu)
+  // If logout button is clicked, revert previous changes
+  loginModal
+    .querySelector('.login__logout-btn')
+    .addEventListener('click', () => {
+      pb.authStore.clear()
+      loggedInBar()
+      loginModal.style.display = 'none'
+      loginModal.innerHTML = ''
+      loginModal.append(form)
+    })
 }
 
 function inputValidator() {

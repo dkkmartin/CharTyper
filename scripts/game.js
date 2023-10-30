@@ -1,4 +1,4 @@
-import getQoute from './qouteAPI'
+import Game from './startGame.js'
 import Timer from './timer'
 import Cookies from 'js-cookie'
 import { winAnimations } from './animations'
@@ -16,11 +16,10 @@ let timerInterval, statisticInterval
 let playAgainBtn, submitBtn
 let timer
 let hasItRunOnce = false
+let statistics
 
 // Fetch text, clean text
-async function getTextFromApi(length) {
-  // Get the quote from API
-  const textData = await getQoute(length)
+async function getTextFromApi(textData) {
   // Clean the text for unwanted special characters
   const cleanedText = textCleaner(textData)
   // Make array out of cleaned text
@@ -171,34 +170,30 @@ function statisticCalculator() {
 }
 
 function winHandler() {
-  showHighscoreElement()
+  statistics = statisticCalculator()
   cookieHandler()
+  showHighscoreElement()
   showNetWPMElement()
   winAnimations()
   removeKeyboardListener()
   timer.stop()
   clearInterval(timerInterval)
-  if (typeof submitBtn !== 'undefined') {
-    submitBtn.addEventListener('click', async () => {
-      const nameInput = document.querySelector('.highscore__name__input')
-      const data = {
-        name: nameInput.value,
-        score: Cookies.get('netWPM'),
-        id: Cookies.get('ID')
-      }
-      await postDataToDB(data)
-      location.reload()
-    })
-  }
-  if (typeof playAgainBtn !== 'undefined') {
-    playAgainBtn.addEventListener('click', () => {
-      location.reload()
-    })
-  }
+  // if (typeof submitBtn !== null) {
+  //   submitBtn.addEventListener('click', async () => {
+  //     const nameInput = document.querySelector('.highscore__name__input')
+  //     const data = {
+  //       name: nameInput.value,
+  //       score: Cookies.get('netWPM'),
+  //       id: Cookies.get('ID')
+  //     }
+  //     await postDataToDB(data)
+  //     Game.setGameMenu()
+  //   })
+  // }
+  // Make eventlistener for playAgainBtn and submitBtn
 }
 
 function cookieHandler() {
-  const statistics = statisticCalculator()
   if (Cookies.get('netWPM')) {
     if (Cookies.get('netWPM') < statistics.netWPM) {
       Cookies.set('netWPM', statistics.netWPM)
@@ -209,7 +204,6 @@ function cookieHandler() {
 }
 
 function showHighscoreElement() {
-  const statistics = statisticCalculator()
   const gameDiv = document.querySelector('.game')
   const newDiv = document.createElement('div')
   newDiv.classList.add('new_highscore__div')

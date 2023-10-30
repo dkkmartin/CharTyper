@@ -3,8 +3,7 @@ import getScoresFromDB from './getUserScores.js'
 import Spinner from './spinner.js'
 import Cookies from 'js-cookie'
 import { animations, animationsAfterAwait } from './animations.js'
-import { v4 as uuidv4 } from 'uuid'
-import { userLoggedIn } from './loginBar.js'
+import { loggedInBar } from './loginBar.js'
 
 const highscore = document.querySelector('.highscore')
 const startGameBtn = document.querySelector('.play')
@@ -14,8 +13,9 @@ const isReduced =
   window.matchMedia('(prefers-reduced-motion: reduce)').matches === true
 
 window.onload = async () => {
+  // Check if user is logged in, then do login bar stuff
+  loggedInBar()
   // If not true run animations
-  userLoggedIn()
   if (!isReduced) {
     animations()
   } else {
@@ -29,16 +29,10 @@ window.onload = async () => {
     animationsAfterAwait()
   }
   spinner.stop('ring-highscore')
-  // If user doesn't have a ID, make one
-  if (!Cookies.get('ID')) {
-    const uniqueId = uuidv4()
-    Cookies.set('ID', uniqueId)
-  }
 }
 
 startGameBtn.addEventListener('click', async (e) => {
   e.preventDefault()
-  Game.removeMenu()
   Game.startGame(lengthSelector.value)
 })
 
