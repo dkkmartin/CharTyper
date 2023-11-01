@@ -3,11 +3,13 @@
 Typeracing game. Type words as fast as you can and get your Words Per Minute (WPM)
 
 ## Features
-
-- Online highscore
-- String limiter
-- Never the same string
-
+ 
+- Challenge your typing speed and accuracy with our interactive typing test.
+- Words Per Minute (WPM) Calculation: Get real-time feedback on your typing speed.
+- Accuracy Tracking: Monitor how precise your typing is.
+- Leaderboard: Compete with others and see who’s the fastest typist.
+- User Authentication: Securely log in to track your progress.
+- Backend Powered by Pocketbase: Manage data seamlessly.
 ## Run Locally
 
 Clone the project
