@@ -11,10 +11,6 @@ Typeracing game. Type words as fast as you can and get your Words Per Minute (WP
 - User Authentication: Securely log in to track your progress.
 - Backend Powered by Pocketbase: Manage data seamlessly.
 
-## Demo
-
-### [Live site 👈](https://chartyper.martinbruun.dk/)
-
 ## Run Locally
 
 Clone the project
