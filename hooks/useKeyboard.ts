@@ -1,18 +1,28 @@
 import { useState, useEffect } from 'react'
 
 function useKeyboard() {
-  const [keysPressed, setKeysPressed] = useState<string[] | null>([])
+  const [keysPressed, setKeysPressed] = useState<string[]>([])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Backspace') {
-        setKeysPressed([...keysPressed])
+        handleBackspace()
+      } else {
+        handleKeyPress(e.key)
       }
-      setKeysPressed(keysPressed ? [...keysPressed, e.key] : [e.key])
+    }
+
+    const handleBackspace = () => {
+      if (keysPressed.length > 0) {
+        setKeysPressed(keysPressed.slice(0, -1))
+      }
+    }
+
+    const handleKeyPress = (key: string) => {
+      setKeysPressed([...keysPressed, key])
     }
 
     document.addEventListener('keydown', handleKeyDown)
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown)
     }
