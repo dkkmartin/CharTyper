@@ -13,17 +13,26 @@ export default function Play() {
     setCurrentWord(sentence[0])
   }, [sentence])
 
-  useEffect(() => {
-    console.log(keyboard.keysPressed)
-    console.log(keyboard.words)
-  }, [keyboard])
-
   return (
     <div className="flex flex-col">
-      <section className="w-screen px-4 text-pretty text-center text-3xl text-zinc-500">
-        {sentence.join(' ')}
+      <section className="w-screen max-w-[1500px] text-pretty text-center text-3xl text-zinc-500">
+        {sentence.map((word, index) => (
+          <span
+            className={`${
+              currentWord === word ? 'text-white' : 'text-zinc-500'
+            } px-2`}
+            key={index}
+          >
+            {word}{' '}
+          </span>
+        ))}
       </section>
-      <section>{keyboard && keyboard.keysPressed.join(' ')}</section>
+      <section>
+        {keyboard.keysPressed.length > 0
+          ? keyboard.keysPressed
+          : keyboard.words.join(' ')}
+      </section>
+      -
     </div>
   )
 }
