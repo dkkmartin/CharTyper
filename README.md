@@ -1,76 +1,36 @@
-# CharTyper
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-Typeracing game. Type words as fast as you can and get your Words Per Minute (WPM)
+## Getting Started
 
-## Features
- 
-- Challenge your typing speed and accuracy with our interactive typing test.
-- Words Per Minute (WPM) Calculation: Get real-time feedback on your typing speed.
-- Accuracy Tracking: Monitor how precise your typing is.
-- Leaderboard: Compete with others and see who’s the fastest typist.
-- User Authentication: Securely log in to track your progress.
-- Backend Powered by Pocketbase: Manage data seamlessly.
-
-## Run Locally
-
-Clone the project
+First, run the development server:
 
 ```bash
-  git clone https://github.com/dkkmartin/CharTyper.git
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-Go to the project directory
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-```bash
-  cd /CharTyper
-```
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Install dependencies
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
-```bash
-  npm install
-```
+## Learn More
 
-Start the server
+To learn more about Next.js, take a look at the following resources:
 
-```bash
-  npm run dev
-```
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Open in browser
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-```bash
-  http://localhost:5173/CharTyper/
-```
+## Deploy on Vercel
 
-## Roadmap
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- [ ] A clean and intuitive interface with improved spacing and readability
-
-- Text highlighting:
-
-  - [ ] Different color schemes for text highlighting based on typing accuracy
-  - [x] Real-time progress tracking to show the user's typing speed and accuracy
-  - [ ] Customizable sound effects and animations to provide engaging feedback while typing
-
-- User feedback when typing
-
-  - [x] Real-time visual cues indicating correct and incorrect typed characters
-  - [ ] Sound effects and animations to provide immediate feedback
-
-- [ ] Integration of a leaderboard to allow users to compare their typing speed and accuracy with others
-
-- Game options
-  - [ ] Option to choose different typing modes, including timed challenges or practice sessions with specific text types.
-  - [ ] Ability to customize the appearance of the typing interface, such as font size and background color
-  - [ ] Support for different typing themes and backgrounds for a personalized typing experience
-  - [ ] Sound toggle button to disable and enable sounds
-- Gamification features
-  - [ ] levels, badges, and rewards, to motivate and engage users in their typing journey
-  - [ ] Ability to track and display typing statistics, such as words per minute and accuracy rate
-
-## Tech Stack
-
-**Client:** Vanilla JS
-
-**Server:** Node, Express
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
