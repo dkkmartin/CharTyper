@@ -14,7 +14,8 @@ export default function Play() {
   }, [sentence])
 
   useEffect(() => {
-    console.log(keyboard)
+    console.log(keyboard.keysPressed)
+    console.log(keyboard.words)
   }, [keyboard])
 
   return (
@@ -22,7 +23,7 @@ export default function Play() {
       <section className="w-screen px-4 text-pretty text-center text-3xl text-zinc-500">
         {sentence.join(' ')}
       </section>
-      <section>{keyboard && keyboard.join(' ')}</section>
+      <section>{keyboard && keyboard.keysPressed.join(' ')}</section>
     </div>
   )
 }
