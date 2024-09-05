@@ -3,11 +3,13 @@ import { useState, useEffect } from 'react'
 function useKeyboard() {
   const [words, setWords] = useState<string[]>([])
   const [keysPressed, setKeysPressed] = useState<string[]>([])
+  const [lastPressed, setLastPressed] = useState<string>('')
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === ' ') {
         handleWordJoin()
+        setLastPressed('Space')
       } else if (e.key === 'Backspace') {
         handleBackspace()
       } else {
@@ -36,6 +38,7 @@ function useKeyboard() {
 
     const handleKeyPress = (key: string) => {
       setKeysPressed([...keysPressed, key])
+      setLastPressed(key)
     }
 
     const handleWordJoin = () => {
@@ -71,7 +74,7 @@ function useKeyboard() {
     }
   }, [keysPressed, words])
 
-  return { keysPressed, words, setWords }
+  return { keysPressed, words, setWords, lastPressed, setLastPressed }
 }
 
 export default useKeyboard
