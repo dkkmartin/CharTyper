@@ -18,6 +18,8 @@ export default function Play() {
     }
   }, [currentWord, keyboard.words, keyboard, sentence])
 
+  useEffect(() => {}, [])
+
   useEffect(() => {
     setCurrentWord(sentence[0])
   }, [sentence])
