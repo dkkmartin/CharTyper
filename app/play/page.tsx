@@ -7,7 +7,16 @@ import { useEffect, useState } from 'react'
 export default function Play() {
   const keyboard = useKeyboard()
   const sentence = useSentece(50)
-  const [currentWord, setCurrentWord] = useState<string | null>('')
+  const [currentWord, setCurrentWord] = useState<string>('')
+
+  useEffect(() => {
+    let index = 0
+    if (currentWord === keyboard.words[0]) {
+      keyboard.setWords(keyboard.words.slice(0, 1))
+      index++
+      setCurrentWord(sentence[index])
+    }
+  }, [currentWord, keyboard.words, keyboard, sentence])
 
   useEffect(() => {
     setCurrentWord(sentence[0])
