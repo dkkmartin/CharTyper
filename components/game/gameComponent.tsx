@@ -2,22 +2,34 @@
 
 import useKeyboard from '@/hooks/useKeyboard'
 import useWords from '@/hooks/useWords'
+import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
 
 function GameComponent() {
   const keyboard = useKeyboard()
   const words = useWords(50)
+  const theme = useTheme()
   const [currentWord, setCurrentWord] = useState<string>('')
   const [wordIndex, setWordIndex] = useState<number>(0)
 
-  // Initiate currentWord with first word from words
+  // Function to get the class name based on the character and its index
+  const getClassName = (char: string, i: number) => {
+    if (i < keyboard.keysPressed.length) {
+      return char === keyboard.keysPressed[i]
+        ? 'bg-green-500/15'
+        : 'bg-red-500/15'
+    }
+    return ''
+  }
+
+  // Initialize currentWord with the first word from words
   useEffect(() => {
     if (words.length > 0) {
       setCurrentWord(words[0])
     }
   }, [words])
 
-  // Handle space key press using keyboard.lastPressed
+  // Handle space and backspace key press using keyboard.lastPressed
   useEffect(() => {
     if (keyboard.lastPressed === 'Space') {
       keyboard.setLastPressed('') // Reset lastPressed to avoid repeated triggers
@@ -30,37 +42,79 @@ function GameComponent() {
         return newIndex
       })
     }
-  }, [keyboard, words])
 
+    if (keyboard.lastPressed === 'Backspace' && keyboard.isKeysPressedEmpty) {
+      keyboard.setLastPressed('') // Reset lastPressed to avoid repeated triggers
+
+      setWordIndex((prevIndex) => {
+        const newIndex = prevIndex - 1
+        if (newIndex >= 0) {
+          setCurrentWord(words[newIndex])
+          keyboard.setKeysPressed(keyboard.words[newIndex].split(''))
+          keyboard.setWords(keyboard.words.slice(0, -1))
+        }
+        return newIndex
+      })
+    }
+  }, [keyboard, words, wordIndex])
+
+  // Log the current state for debugging purposes
   useEffect(() => {
-    console.log('Current word: ', currentWord)
-    console.log('Typing: ', keyboard.words)
+    console.log('Keys pressed: ', keyboard.keysPressed)
+    console.log('Words: ', keyboard.words)
     console.log('Last input: ', keyboard.lastPressed)
-  }, [currentWord, keyboard])
+  }, [currentWord, keyboard, wordIndex])
 
   return (
-    <section className="max-w-[1500px] text-4xl text-zinc-500 flex flex-wrap justify-center">
+    <section className="max-w-[1500px] text-4xl text-zinc-700 flex flex-wrap justify-center">
+      {/* Current word user is on */}
       {words.map((word, index) =>
         wordIndex === index ? (
-          <span key={index}>
+          <span
+            key={index}
+            className={`px-2 ${
+              theme.resolvedTheme === 'dark' ? 'text-white' : 'text-black'
+            }`}
+          >
             {word.split('').map((char, i) => (
-              <span
-                className={
-                  i < keyboard.keysPressed.length
-                    ? char === keyboard.keysPressed[i]
-                      ? 'text-green-500'
-                      : 'text-red-500'
-                    : 'text-white'
-                }
-                key={i}
-              >
-                {char}
+              <span className={getClassName(char, i)} key={i}>
+                {keyboard.keysPressed.length > 0 &&
+                i < keyboard.keysPressed.length ? (
+                  keyboard.keysPressed[i] === char ? (
+                    <span>{char}</span>
+                  ) : (
+                    <span>{keyboard.keysPressed[i]}</span>
+                  )
+                ) : (
+                  char
+                )}
               </span>
             ))}
-            &nbsp;
+            {/* Render extra characters typed by the user */}
+            {keyboard.keysPressed.length > word.length &&
+              keyboard.keysPressed.slice(word.length).map((extraChar, i) => (
+                <span
+                  className={`bg-red-500/15 ${
+                    theme.resolvedTheme === 'dark' ? 'text-white' : 'text-black'
+                  }`}
+                  key={`extra-${i}`}
+                >
+                  {extraChar}
+                </span>
+              ))}
           </span>
         ) : (
-          <span key={index}>{word} &nbsp;</span>
+          // All other words
+          <span
+            key={index}
+            className={
+              keyboard.words[index] && words[index] !== keyboard.words[index]
+                ? 'border-b-2 border-white border-spacing-4 px-2'
+                : 'px-2'
+            }
+          >
+            {word}
+          </span>
         )
       )}
     </section>
