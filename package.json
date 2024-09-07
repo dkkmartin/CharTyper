@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "npx playwright test",
+    "test-ui": "npx playwright test --ui",
+    "test-headed": "npx playwright test --headed",
+    "test-debug": "npx playwright test --debug",
+    "codegen": "npx playwright codegen localhost:3000"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.0",
@@ -25,6 +30,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.47.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
