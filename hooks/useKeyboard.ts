@@ -27,15 +27,7 @@ function useKeyboard() {
         setKeysPressed(keysPressed.slice(0, -1))
         setIsKeysPressedEmpty(false)
       } else if (words.length > 0) {
-        // Remove the last character from the last word in words
-        const lastWord = words[words.length - 1].slice(0, -1)
-        if (lastWord === '') {
-          // If the last word becomes an empty string, remove it from words
-          setWords(words.slice(0, -1))
-        } else {
-          // Otherwise, update the last word in words
-          setWords([...words.slice(0, -1), lastWord])
-        }
+        // Just set isKeysPressedEmpty to true without modifying the last word
         setIsKeysPressedEmpty(true)
       }
     }
