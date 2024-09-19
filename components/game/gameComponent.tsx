@@ -48,12 +48,13 @@ function GameComponent() {
 
       setWordIndex((prevIndex) => {
         const newIndex = prevIndex - 1
-        if (newIndex >= 0) {
+        if (newIndex >= 0 && keyboard.words[newIndex] !== undefined) {
           setCurrentWord(words[newIndex])
           keyboard.setKeysPressed(keyboard.words[newIndex].split(''))
+          // Remove the last word from keyboard.words without modifying it
           keyboard.setWords(keyboard.words.slice(0, -1))
         }
-        return newIndex
+        return newIndex >= 0 ? newIndex : prevIndex
       })
     }
   }, [keyboard, words, wordIndex])
