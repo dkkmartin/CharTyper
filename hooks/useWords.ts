@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 function useWords(wordCount: number) {
-  const [sentence, setSentence] = useState<string[]>([])
+  const [words, setWords] = useState<string[]>([])
 
   useEffect(() => {
     const words = [
@@ -1001,14 +1001,14 @@ function useWords(wordCount: number) {
       return lowercasedWord(word)
     }
 
-    const generateRandomSentence = (count: number) => {
+    const generateRandomWords = (count: number) => {
       return Array.from({ length: count }, getRandomWord)
     }
 
-    setSentence(generateRandomSentence(wordCount))
+    setWords(generateRandomWords(wordCount))
   }, [wordCount])
 
-  return sentence
+  return words
 }
 
 export default useWords
